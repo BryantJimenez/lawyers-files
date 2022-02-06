@@ -1,0 +1,125 @@
+@media (max-width: 1919px) {
+  .container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    max-width: 60% !important;;
+  }
+}
+
+label.error {
+  width: 100%;
+  color: red;
+  font-weight: bold;
+  /*padding: .7em;*/
+  /*vertical-align: middle;*/
+  font-size: 12px;
+  /*border: 1px red solid;
+  border-top: none;*/
+}
+
+.vh-70 {
+  height: 70vh;
+}
+
+.overflow-scroll {
+  overflow-y: scroll;
+}
+
+.bg-light-grey {
+  background-color: #f7f7f7;
+}
+
+.btn.btn-facebook {
+  background: #3b5998;
+  border: 1px solid #3b5998;
+}
+
+.btn.btn-facebook:hover {
+  background: #3a73b6;
+  border: 1px solid #3a73b6;
+}
+
+#modal-login .modal-dialog, #modal-register .modal-dialog {
+  max-width: 390px;
+}
+
+#modal-login .close, #modal-register .close {
+  opacity: 1;
+  position: absolute;
+  right: -30px;
+  color: #fff;
+}
+
+.line-top {
+  margin: 1em auto 1.2em;
+}
+
+.line {
+  text-align: center;
+  width: 320px;
+}
+
+.sub {
+  font-size: 1rem;
+  color: #A9B1B7;
+  margin: 0 auto;
+  z-index: 3;
+  position: relative;
+  background: #fff;
+  padding: 0 .8em;
+  line-height: 1;
+}
+
+.line.line-top hr {
+  margin: -15px 0 8px 0;
+  z-index: 2;
+  position: relative;
+  border: 0;
+  border-top: 1px solid #E8E8E8;
+  border-bottom: 1px solid #FAFAFA;
+}
+
+.btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:active, .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
+  background: #6d8dc4;
+  border: 1px solid #6d8dc4;
+  color: #fff;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  border: 1px solid #d20404;
+  color: #d20404;
+}
+
+.btn-outline-primary:hover {
+  background: #d20404;
+  border: 1px solid #d20404;
+}
+
+.btn.btn-white:hover {
+  background: #d20404;
+  border: 1px solid #d20404;
+}
+
+img.zoom, .overflow-hidden:hover img.zoom {
+  overflow: hidden;
+  -webkit-transition: all .9s ease;
+  -moz-transition: all .9s ease;
+  -o-transition: all .9s ease;
+  -ms-transition: all .9s ease;
+  transition: all .9s ease;
+}
+
+img.zoom:hover, .overflow-hidden:hover img.zoom {
+  -webkit-transform: scale(1.25);
+  -moz-transform: scale(1.25);
+  -o-transform: scale(1.25);
+  -ms-transform: scale(1.25);
+  transform: scale(1.25);
+}

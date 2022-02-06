@@ -205,6 +205,10 @@ $(document).ready(function(){
 					required: true
 				},
 
+				state: {
+					required: true
+				},
+
 				password: {
 					required: true,
 					minlength: 8,
@@ -225,10 +229,81 @@ $(document).ready(function(){
 
 				type: {
 					required: 'Seleccione una opción.'
+				},
+
+				state: {
+					required: 'Seleccione una opción.'
 				}
 			},
 			submitHandler: function(form) {
 				$("button[action='user']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	// Clientes
+	$("button[action='customer']").on("click",function(){
+		$("#formCustomer").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				lastname: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				email: {
+					required: true,
+					email: true,
+					minlength: 5,
+					maxlength: 191,
+					remote: {
+						url: "/usuarios/email",
+						type: "get"
+					}
+				},
+
+				phone: {
+					required: true,
+					minlength: 5,
+					maxlength: 15
+				},
+
+				state: {
+					required: true
+				},
+
+				password: {
+					required: true,
+					minlength: 8,
+					maxlength: 40
+				},
+
+				password_confirmation: { 
+					equalTo: "#password",
+					minlength: 8,
+					maxlength: 40
+				}
+			},
+			messages:
+			{
+				email: {
+					remote: "Este correo ya esta en uso."
+				},
+
+				state: {
+					required: 'Seleccione una opción.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='customer']").attr('disabled', true);
 				form.submit();
 			}
 		});

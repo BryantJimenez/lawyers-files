@@ -18,7 +18,9 @@ Auth::routes(['register' => false]);
 Route::get('/usuarios/email', 'AdminController@emailVerifyAdmin');
 
 /////////////////////////////////////////////// WEB ////////////////////////////////////////////////
-Route::get('/', 'WebController@index')->name('home');
+Route::get('/', function() {
+	return redirect()->route('admin');
+});
 
 /////////////////////////////////////// ADMIN ///////////////////////////////////////////////////
 Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
@@ -43,5 +45,18 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		Route::delete('/{user:slug}', 'UserController@destroy')->name('users.delete')->middleware('permission:users.delete');
 		Route::put('/{user:slug}/activar', 'UserController@activate')->name('users.activate')->middleware('permission:users.active');
 		Route::put('/{user:slug}/desactivar', 'UserController@deactivate')->name('users.deactivate')->middleware('permission:users.deactive');
+	});
+
+	// Customers
+	Route::prefix('clientes')->group(function () {
+		Route::get('/', 'CustomerController@index')->name('customers.index')->middleware('permission:customers.index');
+		Route::get('/registrar', 'CustomerController@create')->name('customers.create')->middleware('permission:customers.create');
+		Route::post('/', 'CustomerController@store')->name('customers.store')->middleware('permission:customers.create');
+		Route::get('/{customer:slug}', 'CustomerController@show')->name('customers.show')->middleware('permission:customers.show');
+		Route::get('/{customer:slug}/editar', 'CustomerController@edit')->name('customers.edit')->middleware('permission:customers.edit');
+		Route::put('/{customer:slug}', 'CustomerController@update')->name('customers.update')->middleware('permission:customers.edit');
+		Route::delete('/{customer:slug}', 'CustomerController@destroy')->name('customers.delete')->middleware('permission:customers.delete');
+		Route::put('/{customer:slug}/activar', 'CustomerController@activate')->name('customers.activate')->middleware('permission:customers.active');
+		Route::put('/{customer:slug}/desactivar', 'CustomerController@deactivate')->name('customers.deactivate')->middleware('permission:customers.deactive');
 	});
 });

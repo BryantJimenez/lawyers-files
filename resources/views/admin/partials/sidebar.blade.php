@@ -29,6 +29,16 @@
                 </a>
             </li>
             @endcan
+
+            @can('customers.index')
+            <li class="menu {{ active('admin/clientes', 0) }}">
+                <a href="{{ route('customers.index') }}" aria-expanded="{{ menu_expanded('admin/clientes', 0) }}" class="dropdown-toggle">
+                    <div class="">
+                        <span><i class="fa fa-user"></i> Clientes</span>
+                    </div>
+                </a>
+            </li>
+            @endcan
         </ul>
 
     </nav>

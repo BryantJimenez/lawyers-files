@@ -19,7 +19,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $users=User::with(['roles'])->orderBy('id', 'DESC')->get();
+        $users=User::role(['Super Admin', 'Administrador'])->with(['roles'])->orderBy('id', 'DESC')->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -29,7 +29,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $roles=Role::all()->pluck('name');
+        $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
         return view('admin.users.create', compact('roles'));
     }
 
@@ -80,7 +80,7 @@ class UserController extends Controller
         if (Auth::user()->id==$user->id) {
             return redirect()->route('profile.edit');
         }
-        $roles=Role::all()->pluck('name');
+        $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
         return view('admin.users.edit', compact("user", "roles"));
     }
 
@@ -114,7 +114,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Category  $category
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)

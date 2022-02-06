@@ -16,8 +16,9 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index() {
-        $users=User::count();
-        return view('admin.home', compact('users'));
+        $users=User::role(['Super Admin', 'Administrador'])->count();
+        $customers=User::role('Cliente')->count();
+        return view('admin.home', compact('users', 'customers'));
     }
 
     public function profile() {

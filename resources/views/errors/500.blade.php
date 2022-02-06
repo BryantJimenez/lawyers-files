@@ -9,7 +9,7 @@
 		<h1 class="error-number">500</h1>
 		<p class="mini-text">Error interno en el servidor!</p>
 		<p class="error-text mb-4 mt-1">Por favor intentelo más tarde!</p>
-		<a href="{{ route('home') }}" class="btn btn-primary mt-5">Volver al Inicio</a>
+		<a href="{{ route('login') }}" class="btn btn-primary mt-5">Volver al Inicio</a>
 	</div>
 </div>
 

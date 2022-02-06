@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Editar Usuario')
+@section('title', 'Editar Cliente')
 
 @section('links')
 <link rel="stylesheet" href="{{ asset('/admins/vendor/dropify/dropify.min.css') }}">
@@ -19,7 +19,7 @@
 			<div class="widget-header">
 				<div class="row">
 					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
-						<h4>Editar Usuario</h4>
+						<h4>Editar Cliente</h4>
 					</div>                 
 				</div>
 			</div>
@@ -31,61 +31,51 @@
 						@include('admin.partials.errors')
 
 						<p>Campos obligatorios (<b class="text-danger">*</b>)</p>
-						<form action="{{ route('users.update', ['user' => $user->slug]) }}" method="POST" class="form" id="formUser" enctype="multipart/form-data">
+						<form action="{{ route('customers.update', ['customer' => $customer->slug]) }}" method="POST" class="form" id="formCustomer" enctype="multipart/form-data">
 							@csrf
 							@method('PUT')
 							<div class="row">
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Foto (Opcional)</label>
-									<input type="file" name="photo" accept="image/*" class="dropify" data-height="125" data-max-file-size="20M" data-allowed-file-extensions="jpg png jpeg web3" data-default-file="{{ image_exist('/admins/img/users/', $user->photo, true) }}" />
+									<input type="file" name="photo" accept="image/*" class="dropify" data-height="125" data-max-file-size="20M" data-allowed-file-extensions="jpg png jpeg web3" data-default-file="{{ image_exist('/admins/img/users/', $customer->photo, true) }}" />
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<div class="row">
 										<div class="form-group col-lg-12 col-md-12 col-12">
 											<label class="col-form-label">Nombre<b class="text-danger">*</b></label>
-											<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $user->name }}">
+											<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $customer->name }}">
 										</div>
 
 										<div class="form-group col-lg-12 col-md-12 col-12">
 											<label class="col-form-label">Apellido<b class="text-danger">*</b></label>
-											<input class="form-control @error('lastname') is-invalid @enderror" type="text" name="lastname" required placeholder="Introduzca un apellido" value="{{ $user->lastname }}">
+											<input class="form-control @error('lastname') is-invalid @enderror" type="text" name="lastname" required placeholder="Introduzca un apellido" value="{{ $customer->lastname }}">
 										</div>
 									</div> 
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Correo Electrónico</label>
-									<input class="form-control" type="text" disabled value="{{ $user->email }}">
+									<input class="form-control" type="text" disabled value="{{ $customer->email }}">
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Teléfono<b class="text-danger">*</b></label>
-									<input class="form-control @error('phone') is-invalid @enderror" type="text" name="phone" required placeholder="Introduzca un teléfono" value="{{ $user->phone }}" id="phone">
-								</div>
-
-								<div class="form-group col-lg-6 col-md-6 col-12">
-									<label class="col-form-label">Tipo<b class="text-danger">*</b></label>
-									<select class="form-control @error('type') is-invalid @enderror" name="type" required>
-										<option value="">Seleccione</option>
-										@foreach($roles as $role)
-										<option @if(!is_null($user->roles) && $user->hasRole($user->roles[0]->name) && $user->roles[0]->name==$role) selected @endif>{{ $role }}</option>
-										@endforeach
-									</select>
+									<input class="form-control @error('phone') is-invalid @enderror" type="text" name="phone" required placeholder="Introduzca un teléfono" value="{{ $customer->phone }}" id="phone">
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Estado<b class="text-danger">*</b></label>
 									<select class="form-control @error('state') is-invalid @enderror" name="state" required>
-										<option value="1" @if($user->state=="Activo") selected @endif>Activo</option>
-										<option value="0" @if($user->state=="Inactivo") selected @endif>Inactivo</option>
+										<option value="1" @if($customer->state=="Activo") selected @endif>Activo</option>
+										<option value="0" @if($customer->state=="Inactivo") selected @endif>Inactivo</option>
 									</select>
 								</div>
 
 								<div class="form-group col-12">
 									<div class="btn-group" role="group">
-										<button type="submit" class="btn btn-primary" action="user">Actualizar</button>
-										<a href="{{ route('users.index') }}" class="btn btn-secondary">Volver</a>
+										<button type="submit" class="btn btn-primary" action="customer">Actualizar</button>
+										<a href="{{ route('customers.index') }}" class="btn btn-secondary">Volver</a>
 									</div>
 								</div> 
 							</div>

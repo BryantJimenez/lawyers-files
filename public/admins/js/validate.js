@@ -308,4 +308,52 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	// Empresas
+	$("button[action='company']").on("click",function(){
+		$("#formCompany").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				social_reason: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				address: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				state: {
+					required: true
+				},
+
+				customer_id: {
+					required: true
+				}
+			},
+			messages:
+			{
+				state: {
+					required: 'Seleccione una opción.'
+				},
+
+				customer_id: {
+					required: 'Seleccione una opción.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='company']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
 });

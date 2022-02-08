@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Lista de Clientes')
+@section('title', 'Lista de Empresas')
 
 @section('links')
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/datatables.css') }}">
@@ -21,7 +21,7 @@
 			<div class="widget-header">
 				<div class="row">
 					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
-						<h4>Lista de Clientes</h4>
+						<h4>Lista de Empresas</h4>
 					</div>                 
 				</div>
 			</div>
@@ -29,9 +29,9 @@
 
 				<div class="row">
 					<div class="col-12">
-						@can('customers.create')
+						@can('companies.create')
 						<div class="text-right">
-							<a href="{{ route('customers.create') }}" class="btn btn-primary">Agregar</a>
+							<a href="{{ route('companies.create') }}" class="btn btn-primary">Agregar</a>
 						</div>
 						@endcan
 
@@ -40,45 +40,43 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Nombre Completo</th>
-										<th>Correo</th>
-										<th>Nº Empresas</th>
+										<th>Nombre</th>
+										<th>Razón Social</th>
+										<th>Dirección</th>
 										<th>Estado</th>
-										@if(auth()->user()->can('customers.show') || auth()->user()->can('customers.edit') || auth()->user()->can('customers.active') || auth()->user()->can('customers.deactive') || auth()->user()->can('customers.delete'))
+										@if(auth()->user()->can('companies.show') || auth()->user()->can('companies.edit') || auth()->user()->can('companies.active') || auth()->user()->can('companies.deactive') || auth()->user()->can('companies.delete'))
 										<th>Acciones</th>
 										@endif
 									</tr>
 								</thead>
 								<tbody>
-									@foreach($customers as $customer)
+									@foreach($companies as $company)
 									<tr>
 										<td>{{ $loop->iteration }}</td>
-										<td class="d-flex">
-											<img src="{{ image_exist('/admins/img/users/', $customer->photo, true) }}" class="rounded-circle mr-2" width="45" height="45" alt="{{ $customer->name." ".$customer->lastname }}" title="{{ $customer->name." ".$customer->lastname }}"> {{ $customer->name." ".$customer->lastname }}
-										</td>
-										<td>{{ $customer->email }}</td>
-										<td>{{ $customer['companies']->count() }}</td>
-										<td>{!! state($customer->state) !!}</td>
-										@if(auth()->user()->can('customers.show') || auth()->user()->can('customers.edit') || auth()->user()->can('customers.active') || auth()->user()->can('customers.deactive') || auth()->user()->can('customers.delete'))
+										<td>{{ $company->name }}</td>
+										<td>{{ $company->social_reason }}</td>
+										<td>{{ $company->address }}</td>
+										<td>{!! state($company->state) !!}</td>
+										@if(auth()->user()->can('companies.show') || auth()->user()->can('companies.edit') || auth()->user()->can('companies.active') || auth()->user()->can('companies.deactive') || auth()->user()->can('companies.delete'))
 										<td>
 											<div class="btn-group" role="group">
-												@can('customers.show')
-												<a href="{{ route('customers.show', ['customer' => $customer->slug]) }}" class="btn btn-primary btn-sm bs-tooltip" title="Perfil"><i class="fa fa-user"></i></a>
+												@can('companies.show')
+												<a href="{{ route('companies.show', ['company' => $company->slug]) }}" class="btn btn-primary btn-sm bs-tooltip" title="Perfil"><i class="fa fa-user"></i></a>
 												@endcan
-												@can('customers.edit')
-												<a href="{{ route('customers.edit', ['customer' => $customer->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+												@can('companies.edit')
+												<a href="{{ route('companies.edit', ['company' => $company->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
 												@endcan
-												@if($customer->state=='Activo')
-												@can('customers.deactive')
-												<button type="button" class="btn btn-warning btn-sm bs-tooltip" title="Desactivar" onclick="deactiveCustomer('{{ $customer->slug }}')"><i class="fa fa-power-off"></i></button>
+												@if($company->state=='Activo')
+												@can('companies.deactive')
+												<button type="button" class="btn btn-warning btn-sm bs-tooltip" title="Desactivar" onclick="deactiveCompany('{{ $company->slug }}')"><i class="fa fa-power-off"></i></button>
 												@endcan
 												@else
-												@can('customers.active')
-												<button type="button" class="btn btn-success btn-sm bs-tooltip" title="Activar" onclick="activeCustomer('{{ $customer->slug }}')"><i class="fa fa-check"></i></button>
+												@can('companies.active')
+												<button type="button" class="btn btn-success btn-sm bs-tooltip" title="Activar" onclick="activeCompany('{{ $company->slug }}')"><i class="fa fa-check"></i></button>
 												@endcan
 												@endif
-												@can('customers.delete')
-												<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteCustomer('{{ $customer->slug }}')"><i class="fa fa-trash"></i></button>
+												@can('companies.delete')
+												<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteCompany('{{ $company->slug }}')"><i class="fa fa-trash"></i></button>
 												@endcan
 											</div>
 										</td>
@@ -97,19 +95,19 @@
 
 </div>
 
-@can('customers.deactive')
-<div class="modal fade" id="deactiveCustomer" tabindex="-1" role="dialog" aria-hidden="true">
+@can('companies.deactive')
+<div class="modal fade" id="deactiveCompany" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres desactivar este cliente?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres desactivar esta empresa?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formDeactiveCustomer">
+				<form action="#" method="POST" id="formDeactiveCompany">
 					@csrf
 					@method('PUT')
 					<button type="submit" class="btn btn-primary">Desactivar</button>
@@ -120,19 +118,19 @@
 </div>
 @endcan
 
-@can('customers.active')
-<div class="modal fade" id="activeCustomer" tabindex="-1" role="dialog" aria-hidden="true">
+@can('companies.active')
+<div class="modal fade" id="activeCompany" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres activar este cliente?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres activar esta empresa?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formActiveCustomer">
+				<form action="#" method="POST" id="formActiveCompany">
 					@csrf
 					@method('PUT')
 					<button type="submit" class="btn btn-primary">Activar</button>
@@ -143,19 +141,19 @@
 </div>
 @endcan
 
-@can('customers.delete')
-<div class="modal fade" id="deleteCustomer" tabindex="-1" role="dialog" aria-hidden="true">
+@can('companies.delete')
+<div class="modal fade" id="deleteCompany" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres eliminar este cliente?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres eliminar esta empresa?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formDeleteCustomer">
+				<form action="#" method="POST" id="formDeleteCompany">
 					@csrf
 					@method('DELETE')
 					<button type="submit" class="btn btn-primary">Eliminar</button>

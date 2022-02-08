@@ -59,4 +59,17 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		Route::put('/{customer:slug}/activar', 'CustomerController@activate')->name('customers.activate')->middleware('permission:customers.active');
 		Route::put('/{customer:slug}/desactivar', 'CustomerController@deactivate')->name('customers.deactivate')->middleware('permission:customers.deactive');
 	});
+
+	// Companies
+	Route::prefix('empresas')->group(function () {
+		Route::get('/', 'CompanyController@index')->name('companies.index')->middleware('permission:companies.index');
+		Route::get('/registrar', 'CompanyController@create')->name('companies.create')->middleware('permission:companies.create');
+		Route::post('/', 'CompanyController@store')->name('companies.store')->middleware('permission:companies.create');
+		Route::get('/{company:slug}', 'CompanyController@show')->name('companies.show')->middleware('permission:companies.show');
+		Route::get('/{company:slug}/editar', 'CompanyController@edit')->name('companies.edit')->middleware('permission:companies.edit');
+		Route::put('/{company:slug}', 'CompanyController@update')->name('companies.update')->middleware('permission:companies.edit');
+		Route::delete('/{company:slug}', 'CompanyController@destroy')->name('companies.delete')->middleware('permission:companies.delete');
+		Route::put('/{company:slug}/activar', 'CompanyController@activate')->name('companies.activate')->middleware('permission:companies.active');
+		Route::put('/{company:slug}/desactivar', 'CompanyController@deactivate')->name('companies.deactivate')->middleware('permission:companies.deactive');
+	});
 });

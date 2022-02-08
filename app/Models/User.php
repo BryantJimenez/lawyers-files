@@ -75,7 +75,7 @@ class User extends Authenticatable
      */
     public function resolveRouteBinding($value, $field = null)
     {
-        $user=$this->with(['roles'])->where($field, $value)->first();
+        $user=$this->with(['roles', 'companies'])->where($field, $value)->first();
         if (!is_null($user)) {
             return $user;
         }
@@ -86,5 +86,9 @@ class User extends Authenticatable
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()->generateSlugsFrom(['name', 'lastname'])->saveSlugsTo('slug')->slugsShouldBeNoLongerThan(191)->doNotGenerateSlugsOnUpdate();
+    }
+
+    public function companies() {
+        return $this->hasMany(Company::class);
     }
 }

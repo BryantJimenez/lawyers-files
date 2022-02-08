@@ -39,6 +39,16 @@
                 </a>
             </li>
             @endcan
+
+            @can('companies.index')
+            <li class="menu {{ active('admin/empresas', 0) }}">
+                <a href="{{ route('companies.index') }}" aria-expanded="{{ menu_expanded('admin/empresas', 0) }}" class="dropdown-toggle">
+                    <div class="">
+                        <span><i class="fa fa-building"></i> Empresas</span>
+                    </div>
+                </a>
+            </li>
+            @endcan
         </ul>
 
     </nav>

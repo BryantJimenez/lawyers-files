@@ -35,6 +35,15 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'customers.active']);
         Permission::create(['name' => 'customers.deactive']);
 
+        // Company Permissions
+        Permission::create(['name' => 'companies.index']);
+        Permission::create(['name' => 'companies.create']);
+        Permission::create(['name' => 'companies.show']);
+        Permission::create(['name' => 'companies.edit']);
+        Permission::create(['name' => 'companies.delete']);
+        Permission::create(['name' => 'companies.active']);
+        Permission::create(['name' => 'companies.deactive']);
+
     	$superadmin=Role::create(['name' => 'Super Admin']);
         $superadmin->givePermissionTo(Permission::all());
         
@@ -45,5 +54,10 @@ class PermissionsSeeder extends Seeder
 
     	$user=User::find(1);
     	$user->assignRole('Super Admin');
+
+        $customers=User::where('id', '!=', '1')->get();
+        foreach ($customers as $customer) {
+            $customer->assignRole('Cliente');
+        }
     }
 }

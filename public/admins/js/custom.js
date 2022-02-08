@@ -300,6 +300,16 @@ function activeCustomer(slug) {
   $('#formActiveCustomer').attr('action', '/admin/clientes/' + slug + '/activar');
 }
 
+function deactiveCompany(slug) {
+  $("#deactiveCompany").modal();
+  $('#formDeactiveCompany').attr('action', '/admin/empresas/' + slug + '/desactivar');
+}
+
+function activeCompany(slug) {
+  $("#activeCompany").modal();
+  $('#formActiveCompany').attr('action', '/admin/empresas/' + slug + '/activar');
+}
+
 //funciones para preguntar al eliminar
 function deleteUser(slug) {
   $("#deleteUser").modal();
@@ -309,4 +319,9 @@ function deleteUser(slug) {
 function deleteCustomer(slug) {
   $("#deleteCustomer").modal();
   $('#formDeleteCustomer').attr('action', '/admin/clientes/' + slug);
+}
+
+function deleteCompany(slug) {
+  $("#deleteCompany").modal();
+  $('#formDeleteCompany').attr('action', '/admin/empresas/' + slug);
 }

@@ -22,6 +22,7 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'lastname' => $faker->lastname,
+        'phone' => $faker->numberBetween($min=10000000, $max=99999999),
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => Hash::make('12345678'),

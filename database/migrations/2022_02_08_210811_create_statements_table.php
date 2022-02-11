@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompaniesTable extends Migration
+class CreateStatementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('statements', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('social_reason');
-            $table->string('address')->nullable();
+            $table->text('description');
+            $table->enum('type', [1, 2])->default(1);
             $table->enum('state', [0, 1])->default(1);
-            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             #Relations
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
@@ -36,6 +36,6 @@ class CreateCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('statements');
     }
 }

@@ -72,4 +72,20 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		Route::put('/{company:slug}/activar', 'CompanyController@activate')->name('companies.activate')->middleware('permission:companies.active');
 		Route::put('/{company:slug}/desactivar', 'CompanyController@deactivate')->name('companies.deactivate')->middleware('permission:companies.deactive');
 	});
+
+	// Statements
+	Route::prefix('casos')->group(function () {
+		Route::get('/', 'StatementController@index')->name('statements.index')->middleware('permission:statements.index');
+		Route::get('/registrar', 'StatementController@create')->name('statements.create')->middleware('permission:statements.create');
+		Route::post('/', 'StatementController@store')->name('statements.store')->middleware('permission:statements.create');
+		Route::post('/archivos', 'StatementController@fileStore')->name('statements.store.files')->middleware('permission:statements.create');
+		Route::get('/{statement:slug}', 'StatementController@show')->name('statements.show')->middleware('permission:statements.show');
+		Route::get('/{statement:slug}/editar', 'StatementController@edit')->name('statements.edit')->middleware('permission:statements.edit');
+		Route::put('/{statement:slug}', 'StatementController@update')->name('statements.update')->middleware('permission:statements.edit');
+		Route::post('/{statement:slug}/archivos/editar', 'StatementController@fileEdit')->name('statements.edit.files')->middleware('permission:statements.edit');
+		Route::post('/{statement:slug}/archivos/eliminar', 'StatementController@fileDestroy')->name('statements.destroy.files')->middleware('permission:statements.edit');
+		Route::delete('/{statement:slug}', 'StatementController@destroy')->name('statements.delete')->middleware('permission:statements.delete');
+		Route::put('/{statement:slug}/activar', 'StatementController@activate')->name('statements.activate')->middleware('permission:statements.active');
+		Route::put('/{statement:slug}/desactivar', 'StatementController@deactivate')->name('statements.deactivate')->middleware('permission:statements.deactive');
+	});
 });

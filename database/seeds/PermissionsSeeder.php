@@ -44,6 +44,15 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'companies.active']);
         Permission::create(['name' => 'companies.deactive']);
 
+        // Statement Permissions
+        Permission::create(['name' => 'statements.index']);
+        Permission::create(['name' => 'statements.create']);
+        Permission::create(['name' => 'statements.show']);
+        Permission::create(['name' => 'statements.edit']);
+        Permission::create(['name' => 'statements.delete']);
+        Permission::create(['name' => 'statements.active']);
+        Permission::create(['name' => 'statements.deactive']);
+
     	$superadmin=Role::create(['name' => 'Super Admin']);
         $superadmin->givePermissionTo(Permission::all());
         

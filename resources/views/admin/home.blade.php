@@ -50,6 +50,24 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="col-xl-4 col-md-4 col-sm-6 col-12 mb-3"> 
+						<div class="card bg-secondary">
+							<div class="card-body">
+								<h5 class="card-text text-white text-center font-weight-bold">Casos</h5>
+								<h2 class="text-white text-center font-weight-bold">{{ $cases }}</h2>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-4 col-md-4 col-sm-6 col-12 mb-3"> 
+						<div class="card bg-secondary">
+							<div class="card-body">
+								<h5 class="card-text text-white text-center font-weight-bold">Declaraciones</h5>
+								<h2 class="text-white text-center font-weight-bold">{{ $statements }}</h2>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

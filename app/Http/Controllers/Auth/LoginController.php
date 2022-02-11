@@ -57,7 +57,7 @@ class LoginController extends Controller
         $count=User::where('email', request('email'))->count();
         if ($count>0) {
             $user=User::where('email', request('email'))->first();
-            if($user->state==0 || !$user->hasPermissionTo('dashboard')) {
+            if($user->state=='Inactivo' || !$user->hasPermissionTo('dashboard')) {
                 return redirect()->back()->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Ingreso no permitido', 'msg' => 'Este usuario no tiene permitido ingresar.'])->withInput();
             }
         }

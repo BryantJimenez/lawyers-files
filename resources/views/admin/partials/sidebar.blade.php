@@ -49,6 +49,16 @@
                 </a>
             </li>
             @endcan
+
+            @can('statements.index')
+            <li class="menu {{ active('admin/casos', 0) }}">
+                <a href="{{ route('statements.index') }}" aria-expanded="{{ menu_expanded('admin/casos', 0) }}" class="dropdown-toggle">
+                    <div class="">
+                        <span><i class="fa fa-comments"></i> Casos</span>
+                    </div>
+                </a>
+            </li>
+            @endcan
         </ul>
 
     </nav>

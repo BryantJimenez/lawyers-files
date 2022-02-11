@@ -268,6 +268,154 @@ $(document).ready(function() {
       maxDate : "today"
     });
   }
+
+  //Jquery uploader
+  if ($('#drop-area').length) {
+    $('#drop-area').dmUploader({
+      url: '/admin/casos/archivos',
+      maxFileSize: 20000000,
+      allowedTypes: "application/pdf",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      onDragEnter: function(){
+        this.addClass('active');
+      },
+      onDragLeave: function(){
+        this.removeClass('active');
+      },
+      onBeforeUpload: function(){
+        $('button[type="submit"]').attr('disabled', true);
+        $("#response").text('Subiendo Archivo...');
+      },
+      onUploadSuccess: function(id, data){
+        var obj=data;
+
+        if (obj.status) {
+          $("#files").append($('<div>', {
+            'class': 'form-group col-lg-3 col-md-3 col-sm-6 col-12',
+            'element': id
+          }).append($('<div>', {
+            'class': 'card'
+          }).append($('<div>', {
+            'class': 'card-body p-2'
+          }).append($('<i>', {
+            'class': 'fa fa-2x fa-file mb-2'
+          })).append($('<p>', {
+            'text': obj.name,
+            'class': 'text-truncate mb-0'
+          }))).append($('<input>', {
+            'type': 'hidden',
+            'name': 'files[]',
+            'value': obj.name
+          })).append($('<button>', {
+            'type': 'button',
+            'class': 'btn btn-danger btn-absolute-right',
+            'file': id,
+            'urlFile': '/admins/files/statements/'+obj.name,
+            'onclick': 'deleteFileCreate("'+id+'");'
+          }).append('<i class="fa fa-trash">'))));
+
+          $('button[type="submit"]').attr('disabled', false);
+          $("#response").text('Correcto');
+        } else {
+          $('button[type="submit"]').attr('disabled', false);
+          $("#response").text('Error');
+        }
+      },
+      onUploadError: function(id, xhr, status, message){  
+        $('button[type="submit"]').attr('disabled', false);
+        $("#response").text('Error');
+      },
+      onFileSizeError: function(file){
+        $('button[type="submit"]').attr('disabled', false);
+        $("#response").text('El archivo \'' + file.name + '\' excede el tamaño máximo permitido.');
+      }
+    });
+  }
+
+  if ($('#drop-area2').length) {
+    $('#drop-area2').dmUploader({
+      url: '/admin/casos/'+$('#slug').val()+'/archivos/editar',
+      maxFileSize: 20000000,
+      allowedTypes: "application/pdf",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      extraData: function() {
+        return {
+          "slug": $('#slug').val()
+        };
+      },
+      onDragEnter: function(){
+        this.addClass('active');
+      },
+      onDragLeave: function(){
+        this.removeClass('active');
+      },
+      onBeforeUpload: function(){
+        $('button[type="submit"]').attr('disabled', true);
+        $("#response").text('Subiendo Archivo...');
+      },
+      onUploadSuccess: function(id, data){
+        var obj=data;
+
+        if (obj.status) {
+          $("#files").append($('<div>', {
+            'class': 'form-group col-lg-3 col-md-3 col-sm-6 col-12',
+            'element': id
+          }).append($('<div>', {
+            'class': 'card'
+          }).append($('<div>', {
+            'class': 'card-body p-2'
+          }).append($('<i>', {
+            'class': 'fa fa-2x fa-file mb-2'
+          })).append($('<p>', {
+            'text': obj.name,
+            'class': 'text-truncate mb-0'
+          }))).append($('<button>', {
+            'type': 'button',
+            'class': 'btn btn-danger btn-absolute-right removeFile',
+            'file': id,
+            'urlFile': '/admins/files/statements/'+obj.name
+          }).append('<i class="fa fa-trash">'))));
+          $('button[type="submit"]').attr('disabled', false);
+          $("#response").text('Correcto');
+          Lobibox.notify('success', {
+            title: 'Registro exitoso',
+            sound: true,
+            msg: 'El archivo ha sido agregado exitosamente.'
+          });
+
+          // Funcion para eliminar archivos de casos
+          $('.removeFile').on('click', function(event) {
+            removeFile($(this), event);
+          });
+        } else {
+          $('button[type="submit"]').attr('disabled', false);
+          $("#response").text('Error');
+          Lobibox.notify('error', {
+            title: 'Registro Fallido',
+            sound: true,
+            msg: 'Ha ocurrido un problema, intentelo nuevamente.'
+          });
+        }
+      },
+      onUploadError: function(id, xhr, status, message){  
+        $('button[type="submit"]').attr('disabled', false);
+        $("#response").text('Error');
+        Lobibox.notify('error', {
+          title: 'Registro Fallido',
+          sound: true,
+          msg: 'Ha ocurrido un problema, intentelo nuevamente.'
+        });
+      },
+      onFileSizeError: function(file){
+        $('button[type="submit"]').attr('disabled', false);
+        $("#response").text('El archivo \'' + file.name + '\' excede el tamaño máximo permitido.');
+      }
+    });
+  }
 });
 
 // funcion para cambiar el input hidden al cambiar el switch de estado
@@ -310,6 +458,16 @@ function activeCompany(slug) {
   $('#formActiveCompany').attr('action', '/admin/empresas/' + slug + '/activar');
 }
 
+function deactiveStatement(slug) {
+  $("#deactiveStatement").modal();
+  $('#formDeactiveStatement').attr('action', '/admin/casos/' + slug + '/desactivar');
+}
+
+function activeStatement(slug) {
+  $("#activeStatement").modal();
+  $('#formActiveStatement').attr('action', '/admin/casos/' + slug + '/activar');
+}
+
 //funciones para preguntar al eliminar
 function deleteUser(slug) {
   $("#deleteUser").modal();
@@ -324,4 +482,58 @@ function deleteCustomer(slug) {
 function deleteCompany(slug) {
   $("#deleteCompany").modal();
   $('#formDeleteCompany').attr('action', '/admin/empresas/' + slug);
+}
+
+function deleteStatement(slug) {
+  $("#deleteStatement").modal();
+  $('#formDeleteStatement').attr('action', '/admin/casos/' + slug);
+}
+
+// Funcion para eliminar archivos de casos
+function deleteFileCreate(file){
+  $("div[element="+file+"]").remove();
+}
+
+// Funcion para eliminar archivos de casos
+$('.removeFile').click(function(event) {
+  removeFile($(this), event);
+});
+
+function removeFile(element, event) {
+  var file=element.attr('file'), slug=$('#slug').val(), urlFile=event.currentTarget.attributes[3].value;
+  urlFile=urlFile.split('/');
+  if (slug!="") {
+    $.ajax({
+      url: '/admin/casos/'+slug+'/archivos/eliminar',
+      type: 'POST',
+      dataType: 'json',
+      data: {slug: slug, url: urlFile[6]},
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    })
+    .done(function(obj) {
+      if (obj.status) {
+        $("div[element='"+file+"']").remove();
+        Lobibox.notify('success', {
+          title: 'Eliminación Exitosa',
+          sound: true,
+          msg: 'La imagen ha sido eliminada exitosamente.'
+        });
+      } else {
+        Lobibox.notify('error', {
+          title: 'Eliminación Fallida',
+          sound: true,
+          msg: 'Ha ocurrido un problema, intentelo nuevamente.'
+        });
+      }
+    })
+    .fail(function() {
+      Lobibox.notify('error', {
+        title: 'Error',
+        sound: true,
+        msg: 'Ha ocurrido un problema, intentelo nuevamente.'
+      });
+    });
+  }
 }

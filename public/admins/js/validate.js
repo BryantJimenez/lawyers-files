@@ -356,4 +356,54 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	// Statements
+	$("button[action='statement']").on("click",function(){
+		$("#formStatement").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				description: {
+					required: true,
+					minlength: 2,
+					maxlength: 6000
+				},
+
+				type: {
+					required: true
+				},
+
+				state: {
+					required: true
+				},
+
+				company_id: {
+					required: true
+				}
+			},
+			messages:
+			{
+				type: {
+					required: 'Seleccione una opción.'
+				},
+
+				state: {
+					required: 'Seleccione una opción.'
+				},
+
+				company_id: {
+					required: 'Seleccione una opción.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='statement']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
 });

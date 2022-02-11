@@ -150,7 +150,12 @@ return [
         'password'              => 'contraseña',
         'confirm'               => 'confirmar contraseña',
         'password_confirmation' => 'confirmar contraseña',
-        'state'                 => 'estado'
+        'state'                 => 'estado',
+        'social_reason'         => 'razón social',
+        'customer_id'           => 'cliente',
+        'company_id'            => 'empresa',
+        'description'           => 'descripción',
+        'files'                 => 'archivos'
     ],
 ];
 ?>

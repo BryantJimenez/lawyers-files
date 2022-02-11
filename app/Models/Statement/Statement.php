@@ -1,18 +1,33 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Statement;
 
-use App\Models\Statement\Statement;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Company extends Model
+class Statement extends Model
 {
     use SoftDeletes, HasSlug;
 
-    protected $fillable = ['name', 'social_reason', 'address', 'state', 'user_id'];
+    protected $fillable = ['name', 'description', 'type', 'state', 'company_id'];
+
+    /**
+     * Get the type.
+     *
+     * @return string
+     */
+    public function getTypeAttribute($value)
+    {
+        if ($value=='1') {
+            return 'Caso';
+        } elseif ($value=='2') {
+            return 'Declaración';
+        }
+        return 'Desconocido';
+    }
 
     /**
      * Get the state.
@@ -38,11 +53,13 @@ class Company extends Model
      */
     public function resolveRouteBinding($value, $field = null)
     {
-        $company=$this->with(['user' => function($query) {
+        $statement=$this->with(['company' => function($query) {
             $query->withTrashed();
-        }])->where($field, $value)->first();
-        if (!is_null($company)) {
-            return $company;
+        }, 'company.user' => function($query) {
+            $query->withTrashed();
+        }, 'files'])->where($field, $value)->first();
+        if (!is_null($statement)) {
+            return $statement;
         }
 
         return abort(404);
@@ -53,11 +70,11 @@ class Company extends Model
         return SlugOptions::create()->generateSlugsFrom(['name'])->saveSlugsTo('slug')->slugsShouldBeNoLongerThan(191)->doNotGenerateSlugsOnUpdate();
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function company() {
+        return $this->belongsTo(Company::class);
     }
 
-    public function statements() {
-        return $this->hasMany(Statement::class);
+    public function files() {
+        return $this->hasMany(FileStatement::class);
     }
 }

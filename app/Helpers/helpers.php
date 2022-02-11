@@ -9,6 +9,13 @@ function state($state) {
 	return '<span class="badge badge-dark">'.$state.'</span>';
 }
 
+function type($type) {
+	if ($type=='Caso' || $type=='Declaración') {
+		return '<span class="badge badge-primary">'.$type.'</span>';
+	}
+	return '<span class="badge badge-dark">'.$type.'</span>';
+}
+
 function roleUser($user, $badge=true) {
 	$num=1;
 	$roles="";

@@ -2632,6 +2632,8 @@ text.apexcharts-datalabel-label {
   font-size: 16px !important;
 }
 
-.form-control.goals {
-  height: 38px !important;
+.btn-absolute-right {
+  position: absolute;
+  top: 5px;
+  right: 20px;
 }

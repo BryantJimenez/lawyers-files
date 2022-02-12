@@ -10,10 +10,11 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes, HasSlug;
+    use Notifiable, HasApiTokens, HasRoles, SoftDeletes, HasSlug;
 
     /**
      * The attributes that are mass assignable.

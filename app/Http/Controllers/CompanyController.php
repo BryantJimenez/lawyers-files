@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Http\Requests\Company\CompanyStoreRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use Illuminate\Http\Request;
+use Auth;
 
 class CompanyController extends Controller
 {
@@ -16,7 +17,11 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $companies=Company::orderBy('id', 'DESC')->get();
+        if (Auth::user()->hasRole('Cliente')) {
+            $companies=Company::where('user_id', Auth::id())->orderBy('id', 'DESC')->get();
+        } else {
+            $companies=Company::orderBy('id', 'DESC')->get();
+        }
         return view('admin.companies.index', compact('companies'));
     }
 
@@ -37,7 +42,11 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CompanyStoreRequest $request) {
-        $user=User::where('slug', request('customer_id'))->first();
+        if (Auth::user()->hasRole('Cliente')) {
+            $user=Auth::user();
+        } else {
+            $user=User::where('slug', request('customer_id'))->first();
+        }
         $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'), 'user_id' => $user->id);
         $company=Company::create($data);
 
@@ -55,6 +64,10 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Company $company) {
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+        
         return view('admin.companies.show', compact('company'));
     }
 
@@ -65,6 +78,10 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Company $company) {
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $customers=User::role('Cliente')->where('state', '1')->get();
         return view('admin.companies.edit', compact("company", 'customers'));
     }
@@ -77,7 +94,15 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(CompanyUpdateRequest $request, Company $company) {
-        $user=User::where('slug', request('customer_id'))->first();
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
+        if (Auth::user()->hasRole('Cliente')) {
+            $user=Auth::user();
+        } else {
+            $user=User::where('slug', request('customer_id'))->first();
+        }
         $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'), 'state' => request('state'), 'user_id' => $user->id);
         $company->fill($data)->save();        
 
@@ -96,6 +121,10 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $company->delete();
         if ($company) {
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La compañia ha sido eliminada exitosamente.']);
@@ -105,6 +134,10 @@ class CompanyController extends Controller
     }
 
     public function deactivate(Request $request, Company $company) {
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $company->fill(['state' => "0"])->save();
         if ($company) {
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La compañia ha sido desactivada exitosamente.']);
@@ -114,6 +147,10 @@ class CompanyController extends Controller
     }
 
     public function activate(Request $request, Company $company) {
+        if (Auth::user()->hasRole('Cliente') && $company->user_id!=Auth::id()) {
+            return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $company->fill(['state' => "1"])->save();
         if ($company) {
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La compañia ha sido activada exitosamente.']);

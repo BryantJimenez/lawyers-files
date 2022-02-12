@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Auth;
 
 class StatementStoreRequest extends FormRequest
 {
@@ -26,7 +27,11 @@ class StatementStoreRequest extends FormRequest
    */
   public function rules()
   {
-    $companies=Company::all()->pluck('slug');
+    if (Auth::user()->hasRole('Cliente')) {
+      $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get()->pluck('slug');
+    } else {
+      $companies=Company::where('state', '1')->get()->pluck('slug');
+    }
     return [
       'name' => 'required|string|min:2|max:191',
       'type' => 'required|'.Rule::in(['1', '2']),

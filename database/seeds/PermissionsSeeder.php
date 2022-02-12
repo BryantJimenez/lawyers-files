@@ -60,6 +60,7 @@ class PermissionsSeeder extends Seeder
     	$admin->givePermissionTo(Permission::all());
 
         $customer=Role::create(['name' => 'Cliente']);
+        $customer->givePermissionTo(['dashboard', 'companies.index', 'companies.create', 'companies.show', 'companies.edit', 'companies.delete', 'companies.active', 'companies.deactive', 'statements.index', 'statements.create', 'statements.show', 'statements.edit', 'statements.delete', 'statements.active', 'statements.deactive']);
 
     	$user=User::find(1);
     	$user->assignRole('Super Admin');

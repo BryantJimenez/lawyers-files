@@ -49,6 +49,7 @@
 									<input class="form-control @error('address') is-invalid @enderror" type="text" name="address" required placeholder="Introduzca una dirección" value="{{ $company->address }}">
 								</div>
 
+								@if(!Auth::user()->hasRole('Cliente'))
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Cliente<b class="text-danger">*</b></label>
 									<select class="form-control @error('customer_id') is-invalid @enderror" name="customer_id" required>
@@ -58,6 +59,7 @@
 										@endforeach
 									</select>
 								</div>
+								@endif
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Estado<b class="text-danger">*</b></label>

@@ -8,6 +8,7 @@ use App\Models\Statement\Statement;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
 use Auth;
 
 class AdminController extends Controller
@@ -20,9 +21,33 @@ class AdminController extends Controller
     public function index() {
         $users=User::role(['Super Admin', 'Administrador'])->count();
         $customers=User::role('Cliente')->count();
-        $companies=Company::count();
-        $cases=Statement::where('type', '1')->count();
-        $statements=Statement::where('type', '2')->count();
+        if (Auth::user()->hasRole('Cliente')) {
+            $companies=Company::where('user_id', Auth::id())->count();
+            $cases=Company::with(['statements'])->where('user_id', Auth::id())->whereHas('statements', function (Builder $query) {
+                $query->where('type', '1');
+            })->get()->pluck('statements')->collapse()->unique('id')->values()->map(function($case) {
+                if ($case->type!='Caso') {
+                    return NULL;
+                }
+                return $case;
+            })->reject(function($case) {
+                return is_null($case);
+            })->values()->count();
+            $statements=Company::with(['statements'])->where('user_id', Auth::id())->whereHas('statements', function (Builder $query) {
+                $query->where('type', '2');
+            })->get()->pluck('statements')->collapse()->unique('id')->values()->map(function($statement) {
+                if ($statement->type!='Declaración') {
+                    return NULL;
+                }
+                return $statement;
+            })->reject(function($statement) {
+                return is_null($statement);
+            })->values()->count();
+        } else {
+            $companies=Company::count();
+            $cases=Statement::where('type', '1')->count();
+            $statements=Statement::where('type', '2')->count();
+        }
         return view('admin.home', compact('users', 'customers', 'companies', 'cases', 'statements'));
     }
 

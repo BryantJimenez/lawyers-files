@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Auth;
 
 class CompanyUpdateRequest extends FormRequest
 {
@@ -26,13 +27,14 @@ class CompanyUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $users=User::all()->pluck('slug');
+        $users=User::where('state', '1')->get()->pluck('slug');
+        $customer=(!Auth::user()->hasRole('Cliente')) ? true : false;
         return [
             'name' => 'required|string|min:2|max:191',
             'social_reason' => 'required|string|min:2|max:191',
             'address' => 'required|string|min:2|max:191',
             'state' => 'required|'.Rule::in(['0', '1']),
-            'customer_id' => 'required|'.Rule::in($users)
+            'customer_id' => Rule::requiredIf($customer).'|'.Rule::in($users)
         ];
     }
 }

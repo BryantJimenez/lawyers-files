@@ -8,6 +8,7 @@ use App\Models\Statement\FileStatement;
 use App\Http\Requests\Statement\StatementStoreRequest;
 use App\Http\Requests\Statement\StatementUpdateRequest;
 use Illuminate\Http\Request;
+use Auth;
 use Str;
 
 class StatementController extends Controller
@@ -18,7 +19,11 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $statements=Statement::orderBy('id', 'DESC')->get();
+        if (Auth::user()->hasRole('Cliente')) {
+            $statements=Company::with(['statements'])->whereHas('statements')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get()->pluck('statements')->collapse()->unique('id')->values();
+        } else {
+            $statements=Statement::orderBy('id', 'DESC')->get();
+        }
         return view('admin.statements.index', compact('statements'));
     }
 
@@ -28,7 +33,11 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $companies=Company::where('state', '1')->get();
+        if (Auth::user()->hasRole('Cliente')) {
+            $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get();
+        } else {
+            $companies=Company::where('state', '1')->get();
+        }
         return view('admin.statements.create', compact('companies'));
     }
 
@@ -64,6 +73,10 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Statement $statement) {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         return view('admin.statements.show', compact('statement'));
     }
 
@@ -74,7 +87,15 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Statement $statement) {
-        $companies=Company::where('state', '1')->get();
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
+        if (Auth::user()->hasRole('Cliente')) {
+            $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get();
+        } else {
+            $companies=Company::where('state', '1')->get();
+        }
         return view('admin.statements.edit', compact("statement", 'companies'));
     }
 
@@ -86,6 +107,10 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(StatementUpdateRequest $request, Statement $statement) {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $company=Company::where('slug', request('company_id'))->first();
         $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'state' => request('state'), 'company_id' => $company->id);
         $statement->fill($data)->save();        
@@ -105,6 +130,10 @@ class StatementController extends Controller
      */
     public function destroy(Statement $statement)
     {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $statement->delete();
         if ($statement) {
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'El caso ha sido eliminado exitosamente.']);
@@ -114,6 +143,10 @@ class StatementController extends Controller
     }
 
     public function deactivate(Request $request, Statement $statement) {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+
         $statement->fill(['state' => "0"])->save();
         if ($statement) {
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El caso ha sido desactivado exitosamente.']);
@@ -123,6 +156,10 @@ class StatementController extends Controller
     }
 
     public function activate(Request $request, Statement $statement) {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
+        }
+        
         $statement->fill(['state' => "1"])->save();
         if ($statement) {
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El caso ha sido activado exitosamente.']);

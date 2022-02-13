@@ -43,6 +43,11 @@ use Illuminate\Http\Request;
 *	description="User profile endpoints"
 * )
 *
+* @OA\Tag(
+*	name="Companies",
+*	description="Companies endpoints"
+* )
+*
 * @OA\SecurityScheme(
 *	securityScheme="bearerAuth",
 *   in="header",
@@ -59,6 +64,13 @@ class ApiController extends Controller
 		$user->photo=(!is_null($user->photo)) ? $user->photo : '';
 		$user->phone=(!is_null($user->phone)) ? $user->phone : '';
 		$data=$user->only("id", "name", "lastname", "slug", "photo", "phone", "email", "state", "rol");
+
+		return $data;
+	}
+
+	public function dataCompany($company) {
+		$company->user=$this->dataUser($company['user']);
+		$data=$company->only("id", "name", "slug", "social_reason", "address", "state", "user");
 
 		return $data;
 	}

@@ -38,5 +38,16 @@ Route::group(['prefix' => 'v1'], function() {
 				Route::post('/email', 'Api\ProfileController@changeEmail');
 			});
 		});
+
+		// Companies
+		Route::group(['prefix' => 'companies'], function () {
+			Route::get('/', 'Api\CompanyController@index')->middleware('permission:companies.index');
+			Route::post('/', 'Api\CompanyController@store')->middleware('permission:companies.create');
+			Route::get('/{company:id}', 'Api\CompanyController@show')->middleware('permission:companies.show');
+			Route::put('/{company:id}', 'Api\CompanyController@update')->middleware('permission:companies.edit');
+			Route::delete('/{company:id}', 'Api\CompanyController@destroy')->middleware('permission:companies.delete');
+			Route::put('/{company:id}/activate', 'Api\CompanyController@activate')->middleware('permission:companies.active');
+			Route::put('/{company:id}/deactivate', 'Api\CompanyController@deactivate')->middleware('permission:companies.deactive');
+		});
 	});
 });

@@ -9,6 +9,7 @@ use App\Http\Requests\Api\Company\ApiCompanyUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Storage;
 use Auth;
 use Arr;
 
@@ -131,12 +132,14 @@ class CompanyController extends ApiController
         $company=Company::create($data);
 
         if ($company) {
+            Storage::disk('google')->makeDirectory($company->slug);
+
             $company=Company::with(['user'])->where('id', $company->id)->first();
             $company=$this->dataCompany($company);
-            return response()->json(['code' => 201, 'status' => 'success', 'message' => 'The company has been successfully registered.', 'data' => $company], 201);
+            return response()->json(['code' => 201, 'status' => 'success', 'message' => 'La empresa ha sido registrada con éxito.', 'data' => $company], 201);
         }
 
-        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 
     /**
@@ -182,7 +185,7 @@ class CompanyController extends ApiController
     */
     public function show(Company $company) {
         if ($company->user_id!=Auth::id()) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This company does not belong to this user.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
     	$company=$this->dataCompany($company);
@@ -263,7 +266,7 @@ class CompanyController extends ApiController
     */
     public function update(ApiCompanyUpdateRequest $request, Company $company) {
         if ($company->user_id!=Auth::id()) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This company does not belong to this user.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
         $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'));
@@ -271,10 +274,10 @@ class CompanyController extends ApiController
         if ($company) {
             $company=Company::with(['user'])->where('id', $company->id)->first();
             $company=$this->dataCompany($company);
-            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The company has been edited successfully.', 'data' => $company], 200);
+            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido editada con éxito.', 'data' => $company], 200);
         }
 
-        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 
     /**
@@ -325,15 +328,15 @@ class CompanyController extends ApiController
     public function destroy(Company $company)
     {
         if ($company->user_id!=Auth::id()) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This company does not belong to this user.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
     	$company->delete();
     	if ($company) {
-    		return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The company has been successfully removed.'], 200);
+    		return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido eliminada con éxito.'], 200);
     	}
 
-    	return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+    	return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 
     /**
@@ -383,16 +386,16 @@ class CompanyController extends ApiController
      */
     public function deactivate(Request $request, Company $company) {
         if ($company->user_id!=Auth::id()) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This company does not belong to this user.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
         $company->fill(['state' => "0"])->save();
         if ($company) {
             $company=$this->dataCompany($company);
-            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The company has been successfully deactivated.', 'data' => $company], 200);
+            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido desactivada con éxito.', 'data' => $company], 200);
         }
 
-        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 
     /**
@@ -442,15 +445,15 @@ class CompanyController extends ApiController
      */
     public function activate(Request $request, Company $company) {
         if ($company->user_id!=Auth::id()) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This company does not belong to this user.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
         $company->fill(['state' => "1"])->save();
         if ($company) {
             $company=$this->dataCompany($company);
-            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The company has been successfully activated.', 'data' => $company], 200);
+            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido activada con éxito.', 'data' => $company], 200);
         }
 
-        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 }

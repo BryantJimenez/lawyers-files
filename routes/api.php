@@ -49,5 +49,18 @@ Route::group(['prefix' => 'v1'], function() {
 			Route::put('/{company:id}/activate', 'Api\CompanyController@activate')->middleware('permission:companies.active');
 			Route::put('/{company:id}/deactivate', 'Api\CompanyController@deactivate')->middleware('permission:companies.deactive');
 		});
+
+		// Statements
+		Route::group(['prefix' => 'statements'], function () {
+			Route::get('/', 'Api\StatementController@index')->middleware('permission:statements.index');
+			Route::post('/', 'Api\StatementController@store')->middleware('permission:statements.create');
+			Route::get('/{statement:id}', 'Api\StatementController@show')->middleware('permission:statements.show');
+			Route::put('/{statement:id}', 'Api\StatementController@update')->middleware('permission:statements.edit');
+			Route::post('/{statement:id}/files', 'Api\StatementController@uploadFile')->middleware('permission:statements.edit');
+			Route::post('/{statement:id}/files/{file:id}', 'Api\StatementController@destroyFile')->middleware('permission:statements.edit');
+			Route::delete('/{statement:id}', 'Api\StatementController@destroy')->middleware('permission:statements.delete');
+			Route::put('/{statement:id}/activate', 'Api\StatementController@activate')->middleware('permission:statements.active');
+			Route::put('/{statement:id}/deactivate', 'Api\StatementController@deactivate')->middleware('permission:statements.deactive');
+		});
 	});
 });

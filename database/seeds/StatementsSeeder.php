@@ -12,6 +12,15 @@ class StatementsSeeder extends Seeder
      */
     public function run()
     {
-        factory(Statement::class, 200)->create();
+        factory(Statement::class, 20)->create();
+
+        $statements=Statement::with(['company'])->get();
+        foreach ($statements as $statement) {
+        	$path='/';
+            $recursive=false;
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+    		Storage::disk('google')->makeDirectory($directory['path'].'/'.$statement->slug);
+        }
     }
 }

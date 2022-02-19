@@ -12,6 +12,11 @@ class CompaniesSeeder extends Seeder
      */
     public function run()
     {
-        factory(Company::class, 100)->create();
+        factory(Company::class, 5)->create();
+
+        $companies=Company::all();
+        foreach ($companies as $company) {
+        	Storage::disk('google')->makeDirectory($company->slug);
+        }
     }
 }

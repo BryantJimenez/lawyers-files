@@ -12,7 +12,7 @@
 
 				<div class="row">
 					<div class="col-xl-5 col-12 mb-3">
-						<div class="card bg-primary">
+						<div class="card bg-dark">
 							<div class="card-body">
 								<h5 class="card-text text-white font-weight-bold">Bienvenido:</h5>
 								<h6 class="text-white font-weight-bold">Administre todo su negocio de forma simple, fácil, comoda y a medida!</h6>

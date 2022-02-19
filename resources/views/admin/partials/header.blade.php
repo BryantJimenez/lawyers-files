@@ -1,10 +1,10 @@
 <div class="header-container fixed-top">
-    <header class="header navbar navbar-expand-sm">
+    <header class="header navbar navbar-expand-sm bg-dark">
 
         <ul class="navbar-nav theme-brand flex-row  text-center">
             <li class="nav-item theme-logo">
                 <a href="{{ route('admin') }}">
-                    <img src="{{ asset('/admins/img/template/90x90.jpg') }}" class="navbar-logo" alt="logo">
+                    <img src="{{ asset('/admins/img/logo.png') }}" class="navbar-logo" alt="logo">
                 </a>
             </li>
             <li class="nav-item theme-text pb-1">

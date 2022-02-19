@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Http\Requests\Company\CompanyStoreRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use Illuminate\Http\Request;
+use Storage;
 use Auth;
 
 class CompanyController extends Controller
@@ -51,6 +52,7 @@ class CompanyController extends Controller
         $company=Company::create($data);
 
         if ($company) {
+            Storage::disk('google')->makeDirectory($company->slug);
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La compañia ha sido registrada exitosamente.']);
         } else {
             return redirect()->route('companies.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();

@@ -377,7 +377,7 @@ $(document).ready(function() {
             'type': 'button',
             'class': 'btn btn-danger btn-absolute-right removeFile',
             'file': id,
-            'urlFile': '/admins/files/statements/'+obj.name
+            'urlFile': obj.url
           }).append('<i class="fa fa-trash">'))));
           $('button[type="submit"]').attr('disabled', false);
           $("#response").text('Correcto');

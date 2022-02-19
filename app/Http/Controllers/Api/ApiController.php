@@ -48,6 +48,11 @@ use Illuminate\Http\Request;
 *	description="Companies endpoints"
 * )
 *
+* @OA\Tag(
+*	name="Statements",
+*	description="Statements endpoints"
+* )
+*
 * @OA\SecurityScheme(
 *	securityScheme="bearerAuth",
 *   in="header",
@@ -69,8 +74,19 @@ class ApiController extends Controller
 	}
 
 	public function dataCompany($company) {
-		$company->user=$this->dataUser($company['user']);
+		$company->user=(!is_null($company['user'])) ? $this->dataUser($company['user']) : [];
 		$data=$company->only("id", "name", "slug", "social_reason", "address", "state", "user");
+
+		return $data;
+	}
+
+	public function dataStatement($statement) {
+		$statement->company=(!is_null($statement['company'])) ? $this->dataCompany($statement['company']) : [];
+		$statement->files=$statement['files']->map(function($file) {
+			$data=array('id' => $file->id, 'file' => env('APP_URL').'/admins/files/statements/'.$file->name);
+			return $data;
+		});
+		$data=$statement->only("id", "name", "slug", "description", "type", "state", "company", "files");
 
 		return $data;
 	}

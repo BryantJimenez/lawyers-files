@@ -65,11 +65,11 @@ class AuthController extends ApiController
 		$user=User::where('email', request('email'))->first();
 
 		if (!Hash::check(request('password'), $user->password)) {
-            return response()->json(['code' => 422, 'status' => 'error', 'message' => 'The password is incorrect.'], 422);
+            return response()->json(['code' => 422, 'status' => 'error', 'message' => 'La contraseña es incorrecta.'], 422);
         }
 
         if ($user->state=='Inactivo') {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'This user is not allowed to enter.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este usuario no puede ingresar.'], 403);
         }
 
         Auth::login($user);
@@ -87,7 +87,7 @@ class AuthController extends ApiController
             return response()->json(['code' => 200, 'status' => 'success', 'access_token' => $tokenResult->accessToken, 'token_type' => 'Bearer', 'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()]);
         }
 
-        return response()->json(['code' => 401, 'status' => 'error', 'message' => 'The credentials do not match.'], 401);
+        return response()->json(['code' => 401, 'status' => 'error', 'message' => 'Las credenciales no coinciden.'], 401);
     }
 
     /**
@@ -116,7 +116,7 @@ class AuthController extends ApiController
     */
     public function logout(Request $request) {
         $request->user()->token()->revoke();
-        return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The session has been closed successfully.'], 200);
+        return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La sesión se ha cerrado con éxito.'], 200);
     }
 
     /**
@@ -229,22 +229,22 @@ class AuthController extends ApiController
     {
         $user=User::where('email', request('email'))->first();
         if (is_null($user)) {
-            return response()->json(['code' => 404, 'status' => 'error', 'message' => 'User not found.'], 404);
+            return response()->json(['code' => 404, 'status' => 'error', 'message' => 'Usuario no encontrado.'], 404);
         }
 
         $data=array('email' => request('email'), 'token' => request('token'));
         $reset_password=DB::table('password_resets')->where($data)->first();
         
         if (is_null($reset_password)) {
-            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'The token is not valid.'], 403);
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'El token no es válido.'], 403);
         }
 
         $user->fill(['password' => Hash::make(request('password'))])->save();
         if ($user) {
             DB::table('password_resets')->where(['email'=> request('email')])->delete();
-            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'The password has been changed successfully.'], 200);
+            return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La contraseña ha sido cambiada con éxito.'], 200);
         }
 
-        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'An error occurred during the process, please try again.'], 500);
+        return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
     }
 }

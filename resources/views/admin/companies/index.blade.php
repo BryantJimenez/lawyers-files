@@ -42,7 +42,7 @@
 										<th>#</th>
 										<th>Nombre</th>
 										<th>Razón Social</th>
-										<th>Dirección</th>
+										<th>RFC</th>
 										<th>Estado</th>
 										@if(auth()->user()->can('companies.show') || auth()->user()->can('companies.edit') || auth()->user()->can('companies.active') || auth()->user()->can('companies.deactive') || auth()->user()->can('companies.delete'))
 										<th>Acciones</th>
@@ -55,7 +55,7 @@
 										<td>{{ $loop->iteration }}</td>
 										<td>{{ $company->name }}</td>
 										<td>{{ $company->social_reason }}</td>
-										<td>{{ $company->address }}</td>
+										<td>{{ $company->rfc }}</td>
 										<td>{!! state($company->state) !!}</td>
 										@if(auth()->user()->can('companies.show') || auth()->user()->can('companies.edit') || auth()->user()->can('companies.active') || auth()->user()->can('companies.deactive') || auth()->user()->can('companies.delete'))
 										<td>

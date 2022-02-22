@@ -12,7 +12,7 @@ class Company extends Model
 {
     use SoftDeletes, HasSlug;
 
-    protected $fillable = ['name', 'social_reason', 'address', 'state', 'user_id'];
+    protected $fillable = ['name', 'social_reason', 'rfc', 'address', 'state', 'user_id'];
 
     /**
      * Get the state.

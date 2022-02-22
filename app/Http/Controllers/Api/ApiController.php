@@ -75,7 +75,7 @@ class ApiController extends Controller
 
 	public function dataCompany($company) {
 		$company->user=(!is_null($company['user'])) ? $this->dataUser($company['user']) : [];
-		$data=$company->only("id", "name", "slug", "social_reason", "address", "state", "user");
+		$data=$company->only("id", "name", "slug", "social_reason", "rfc", "address", "state", "user");
 
 		return $data;
 	}

@@ -19,6 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('social_reason');
+            $table->string('rfc');
             $table->string('address')->nullable();
             $table->enum('state', [0, 1])->default(1);
             $table->bigInteger('user_id')->unsigned()->nullable();
@@ -44,7 +45,9 @@ class CreateCompaniesTable extends Migration
         $companies=Company::all();
         foreach ($companies as $company) {
             $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
-            Storage::disk('google')->deleteDirectory($directory['path']);
+            if ($directory) {
+                Storage::disk('google')->deleteDirectory($directory['path']);
+            }
         }
 
         Schema::dropIfExists('companies');

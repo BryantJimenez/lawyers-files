@@ -94,6 +94,15 @@ class CompanyController extends ApiController
     *       )
     *   ),
     *   @OA\Parameter(
+    *       name="rfc",
+    *       in="query",
+    *       description="RFC of company",
+    *       required=true,
+    *       @OA\Schema(
+    *           type="string"
+    *       )
+    *   ),
+    *   @OA\Parameter(
     *       name="address",
     *       in="query",
     *       description="Address of company",
@@ -128,7 +137,7 @@ class CompanyController extends ApiController
     * )
     */
     public function store(ApiCompanyStoreRequest $request) {
-        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'), 'user_id' => Auth::id());
+        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'rfc' => request('rfc'), 'address' => request('address'), 'user_id' => Auth::id());
         $company=Company::create($data);
 
         if ($company) {
@@ -231,6 +240,15 @@ class CompanyController extends ApiController
     *       )
     *   ),
     *   @OA\Parameter(
+    *       name="rfc",
+    *       in="query",
+    *       description="RFC of company",
+    *       required=true,
+    *       @OA\Schema(
+    *           type="string"
+    *       )
+    *   ),
+    *   @OA\Parameter(
     *       name="address",
     *       in="query",
     *       description="Address of company",
@@ -269,7 +287,7 @@ class CompanyController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
-        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'));
+        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'rfc' => request('rfc'), 'address' => request('address'));
         $company->fill($data)->save();
         if ($company) {
             $company=Company::with(['user'])->where('id', $company->id)->first();

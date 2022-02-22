@@ -11,6 +11,7 @@ $factory->define(Company::class, function (Faker $faker) {
     return [
         'name' => $faker->company,
         'social_reason' => $faker->company,
+        'rfc' => $faker->ean13,
         'address' => $faker->address,
         'state' => $faker->randomElement(['1', '0']),
         'user_id' => $faker->randomElement($customers)

@@ -326,6 +326,12 @@ $(document).ready(function(){
 					maxlength: 191
 				},
 
+				rfc: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
 				address: {
 					required: true,
 					minlength: 2,

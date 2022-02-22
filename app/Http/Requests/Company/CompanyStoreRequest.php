@@ -32,6 +32,7 @@ class CompanyStoreRequest extends FormRequest
     return [
       'name' => 'required|string|min:2|max:191',
       'social_reason' => 'required|string|min:2|max:191',
+      'rfc' => 'required|string|min:1|max:191|unique:companies,rfc',
       'address' => 'required|string|min:2|max:191',
       'customer_id' => Rule::requiredIf($customer).'|'.Rule::in($users)
     ];

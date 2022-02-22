@@ -33,6 +33,9 @@
 								<span class="h6 text-black"><b>Cantidad de Archivos:</b> {{ $statement['files']->count() }}</span>
 							</li>
 							<li class="contacts-block__item">
+								<span class="h6 text-black"><b>Fecha:</b> {{ $statement->created_at->format('d-m-Y') }}</span>
+							</li>
+							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Estado:</b> {!! state($statement->state) !!}</span>
 							</li>
 							<li class="contacts-block__item">
@@ -62,6 +65,9 @@
 							</li>
 							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Razón Social:</b> {{ $statement['company']->social_reason }}</span>
+							</li>
+							<li class="contacts-block__item">
+								<span class="h6 text-black"><b>RFC:</b> {{ $statement['company']->rfc }}</span>
 							</li>
 							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Dirección:</b> {{ $statement['company']->address }}</span>

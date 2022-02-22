@@ -255,6 +255,15 @@
                         }
                     },
                     {
+                        "name": "rfc",
+                        "in": "query",
+                        "description": "RFC of company",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "address",
                         "in": "query",
                         "description": "Address of company",
@@ -363,6 +372,15 @@
                         "name": "social_reason",
                         "in": "query",
                         "description": "Social reason of company",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rfc",
+                        "in": "query",
+                        "description": "RFC of company",
                         "required": true,
                         "schema": {
                             "type": "string"

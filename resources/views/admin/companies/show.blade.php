@@ -64,6 +64,9 @@
 								<span class="h6 text-black"><b>Razón Social:</b> {{ $company->social_reason }}</span>
 							</li>
 							<li class="contacts-block__item">
+								<span class="h6 text-black"><b>RFC:</b> {{ $company->rfc }}</span>
+							</li>
+							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Dirección:</b> {{ $company->address }}</span>
 							</li>
 							<li class="contacts-block__item">

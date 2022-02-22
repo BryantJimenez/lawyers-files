@@ -41,6 +41,11 @@
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
+									<label class="col-form-label">RFC<b class="text-danger">*</b></label>
+									<input class="form-control @error('rfc') is-invalid @enderror" type="text" name="rfc" required placeholder="Introduzca el RFC" value="{{ old('rfc') }}">
+								</div>
+
+								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Dirección<b class="text-danger">*</b></label>
 									<input class="form-control @error('address') is-invalid @enderror" type="text" name="address" required placeholder="Introduzca una dirección" value="{{ old('address') }}">
 								</div>

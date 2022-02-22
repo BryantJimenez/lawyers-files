@@ -48,7 +48,7 @@ class CompanyController extends Controller
         } else {
             $user=User::where('slug', request('customer_id'))->first();
         }
-        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'), 'user_id' => $user->id);
+        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'rfc' => request('rfc'), 'address' => request('address'), 'user_id' => $user->id);
         $company=Company::create($data);
 
         if ($company) {
@@ -105,7 +105,7 @@ class CompanyController extends Controller
         } else {
             $user=User::where('slug', request('customer_id'))->first();
         }
-        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'address' => request('address'), 'state' => request('state'), 'user_id' => $user->id);
+        $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'rfc' => request('rfc'), 'address' => request('address'), 'state' => request('state'), 'user_id' => $user->id);
         $company->fill($data)->save();        
 
         if ($company) {

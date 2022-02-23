@@ -59,6 +59,10 @@ class ResolutionController extends ApiController
     * )
     */
     public function index(Statement $statement) {
+        if (!is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
+        }
+
         $resolutions=$statement['resolutions']->map(function($resolution) {
             return $this->dataResolution($resolution);
         });
@@ -139,6 +143,10 @@ class ResolutionController extends ApiController
     * )
     */
     public function store(ApiResolutionStoreRequest $request, Statement $statement) {
+        if (!is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
+        }
+        
         $data=array('name' => request('name'), 'description' => request('description'), 'date' => request('date'), 'statement_id' => $statement->id);
         $resolution=Resolution::create($data);
 

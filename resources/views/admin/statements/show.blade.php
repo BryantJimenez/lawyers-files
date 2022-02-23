@@ -4,6 +4,9 @@
 
 @section('links')
 <link href="{{ asset('/admins/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/datatables.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/custom_dt_html5.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/dt-global_style.css') }}">
 @endsection
 
 @section('content')
@@ -30,7 +33,7 @@
 								<span class="h6 text-black"><b>Descripción:</b> {{ $statement->description }}</span>
 							</li>
 							<li class="contacts-block__item">
-								<span class="h6 text-black"><b>Cantidad de Archivos:</b> {{ $statement['files']->count() }}</span>
+								<span class="h6 text-black"><b>Cantidad de Resoluciones:</b> {{ $statement['resolutions']->count() }}</span>
 							</li>
 							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Fecha:</b> {{ $statement->created_at->format('d-m-Y') }}</span>
@@ -86,35 +89,102 @@
 	</div>
 	@endif
 
-	@if($statement['files']->count()>0)
 	<div class="col-12 layout-top-spacing">
 
 		<div class="user-profile layout-spacing">
 			<div class="widget-content widget-content-area">
 				<div class="d-flex justify-content-between">
-					<h3 class="pb-3">Archivos del Caso</h3>
+					<h3 class="pb-3">Resoluciones del Caso</h3>
 				</div>
 				<div class="user-info-list">
 
 					<div class="">
 						<ul class="contacts-block list-unstyled mw-100 mx-2">
-							@foreach($statement['files'] as $file)
 							<li class="contacts-block__item">
-								<span class="h6 text-black">
-									<a href="{{ image_exist('/admins/files/statements/', $file->name) }}" download class="mr-3">{{ $file->name }}</a>
-									<a href="{{ image_exist('/admins/files/statements/', $file->name) }}" download class="btn btn-sm btn-secondary px-2 py-1">
-										<i class="fa fa-sm fa-download"></i>
-									</a>
-								</span>
+								@can('resolutions.create')
+								<div class="mb-3">
+									<a href="{{ route('resolutions.create', ['statement' => $statement->slug]) }}" class="btn btn-primary">Agregar</a>
+								</div>
+								@endcan
+
+								<div class="table-responsive">
+									<table class="table table-normal table-hover">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Nombre</th>
+												<th>Nº Documentos</th>
+												<th>Fecha</th>
+												@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
+												<th>Acciones</th>
+												@endif
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($statement['resolutions'] as $resolution)
+											<tr>
+												<td>{{ $loop->iteration }}</td>
+												<td>{{ $resolution->name }}</td>
+												<td>{{ $resolution['files']->count() }}</td>
+												<td>{{ $resolution->date->format('d-m-Y') }}</td>
+												@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
+												<td>
+													<div class="btn-group" role="group">
+														@can('resolutions.show')
+														<a href="{{ route('resolutions.show', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-primary btn-sm bs-tooltip" title="Perfil"><i class="fa fa-user"></i></a>
+														@endcan
+														@can('resolutions.edit')
+														<a href="{{ route('resolutions.edit', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+														@endcan
+														@can('resolutions.delete')
+														<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteResolution('{{ $statement->slug }}', '{{ $resolution->slug }}')"><i class="fa fa-trash"></i></button>
+														@endcan
+													</div>
+												</td>
+												@endif
+											</tr>
+											@endforeach
+										</tbody>
+									</table>
+								</div>
 							</li>
-							@endforeach
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	@endif
 </div>
 
+@can('resolutions.delete')
+<div class="modal fade" id="deleteResolution" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">¿Estás seguro de que quieres eliminar esta resolución?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+				<form action="#" method="POST" id="formDeleteResolution">
+					@csrf
+					@method('DELETE')
+					<button type="submit" class="btn btn-primary">Eliminar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endcan
+
+@endsection
+
+@section('scripts')
+<script src="{{ asset('/admins/vendor/table/datatable/datatables.js') }}"></script>
+<script src="{{ asset('/admins/vendor/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('/admins/vendor/table/datatable/button-ext/jszip.min.js') }}"></script>    
+<script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.print.min.js') }}"></script>
 @endsection

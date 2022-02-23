@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\Statement;
+namespace App\Http\Requests\Api\Resolution;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApiUploadFileStatementStoreRequest extends FormRequest
+class ApiUploadFileResolutionStoreRequest extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.

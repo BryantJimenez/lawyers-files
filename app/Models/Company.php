@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Statement\Statement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
@@ -12,7 +11,7 @@ class Company extends Model
 {
     use SoftDeletes, HasSlug;
 
-    protected $fillable = ['name', 'social_reason', 'rfc', 'address', 'state', 'user_id'];
+    protected $fillable = ['name', 'slug', 'social_reason', 'rfc', 'address', 'state', 'user_id'];
 
     /**
      * Get the state.

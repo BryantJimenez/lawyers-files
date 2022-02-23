@@ -3,7 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Company;
-use App\Models\Statement\Statement;
+use App\Models\Statement;
 
 use Faker\Generator as Faker;
 

@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\Statement\Statement;
-use App\Models\Statement\FileStatement;
+use App\Models\Statement;
 use App\Http\Requests\Statement\StatementStoreRequest;
 use App\Http\Requests\Statement\StatementUpdateRequest;
 use Illuminate\Http\Request;
 use Storage;
 use Auth;
-use Str;
 
 class StatementController extends Controller
 {
@@ -59,19 +57,6 @@ class StatementController extends Controller
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
             $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
             Storage::disk('google')->makeDirectory($directory['path'].'/'.$statement->slug);
-
-            $path='/'.$directory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
-
-            // Mover archivos a carpeta statements y extraer nombre
-            if ($request->has('files')) {
-                foreach (request('files') as $file) {
-                    FileStatement::create(['name' => $file, 'statement_id' => $statement->id])->save();
-                    $filePath=public_path('admins/files/statements/'.$file);
-                    Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$file, fopen($filePath, 'r+'));
-                }
-            }
 
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'El caso ha sido registrado exitosamente.']);
         } else {
@@ -179,81 +164,5 @@ class StatementController extends Controller
         } else {
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
-    }
-
-    public function fileStore(Request $request) {
-        if ($request->hasFile('file')) {
-            $file=$request->file('file');
-            $name=time().'_'.Str::slug(substr($file->getClientOriginalName(), 0, "-".strlen($file->getClientOriginalExtension())), "-").".".$file->getClientOriginalExtension();
-            $file->move(public_path().'/admins/files/statements/', $name);
-            
-            return response()->json(['status' => true, 'name' => $name]);
-        }
-
-        return response()->json(['status' => false]);
-    }
-
-    public function fileEdit(Request $request) {
-        $statement=Statement::with(['company'])->where('slug', request('slug'))->first();
-        if (!is_null($statement)) {
-            if ($request->hasFile('file')) {
-                $file=$request->file('file');
-                $name=time().'_'.Str::slug(substr($file->getClientOriginalName(), 0, "-".strlen($file->getClientOriginalExtension())), "-").".".$file->getClientOriginalExtension();
-                $file->move(public_path().'/admins/files/statements/', $name);
-
-                $file=FileStatement::create(['name' => $name, 'statement_id' => $statement->id]);
-                if ($file) {
-                    $path='/';
-                    $recursive=false;
-                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
-
-                    $path='/'.$directory['path'].'/';
-                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
-
-                    $filePath=public_path('admins/files/statements/'.$name);
-                    Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$name, fopen($filePath, 'r+'));
-
-                    return response()->json(['status' => true, 'name' => $name, 'url' => asset('/admins/files/statements/'.$name), 'slug' => $statement->slug]);
-                }
-            }
-        }
-
-        return response()->json(['status' => false]);
-    }
-
-    public function fileDestroy(Request $request) {
-        $statement=Statement::with(['company'])->where('slug', request('slug'))->first();
-        if (!is_null($statement)) {
-            $file=FileStatement::where('statement_id', $statement->id)->where('name', request('url'))->first();
-            if (!is_null($file)) {
-                $file->delete();
-
-                if ($file) {
-                    if (file_exists(public_path().'/admins/files/statements/'.request('url'))) {
-                        unlink(public_path().'/admins/files/statements/'.request('url'));
-                    }
-
-                    $path='/';
-                    $recursive=false;
-                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
-
-                    $path='/'.$directory['path'].'/';
-                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
-
-                    $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
-                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $file_drive=$contents->where('type', '=', 'file')->where('filename', '=', pathinfo($file->name, PATHINFO_FILENAME))->where('extension', '=', pathinfo($file->name, PATHINFO_EXTENSION))->first();
-                    Storage::disk('google')->delete($directory['path'].'/'.$subdirectory['path'].'/'.$file_drive['path']);
-
-                    return response()->json(['status' => true]);
-                }
-            }
-        }
-
-        return response()->json(['status' => false]);
     }
 }

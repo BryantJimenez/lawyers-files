@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFileStatementTable extends Migration
+class CreateResolutionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreateFileStatementTable extends Migration
      */
     public function up()
     {
-        Schema::create('file_statement', function (Blueprint $table) {
+        Schema::create('resolutions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description');
+            $table->date('date');
             $table->bigInteger('statement_id')->unsigned()->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             #Relations
-            $table->foreign('statement_id')->references('id')->on('statements')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('statement_id')->references('id')->on('statements')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
@@ -31,6 +35,6 @@ class CreateFileStatementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file_statement');
+        Schema::dropIfExists('resolutions');
     }
 }

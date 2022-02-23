@@ -272,7 +272,7 @@ $(document).ready(function() {
   //Jquery uploader
   if ($('#drop-area').length) {
     $('#drop-area').dmUploader({
-      url: '/admin/casos/archivos',
+      url: '/admin/casos/'+$('#statement_slug').val()+'/resoluciones/archivos',
       maxFileSize: 20000000,
       allowedTypes: "application/pdf",
       headers: {
@@ -336,7 +336,7 @@ $(document).ready(function() {
 
   if ($('#drop-area2').length) {
     $('#drop-area2').dmUploader({
-      url: '/admin/casos/'+$('#slug').val()+'/archivos/editar',
+      url: '/admin/casos/'+$('#statement_slug').val()+'/resoluciones/'+$('#resolution_slug').val()+'/archivos/editar',
       maxFileSize: 20000000,
       allowedTypes: "application/pdf",
       headers: {
@@ -344,7 +344,8 @@ $(document).ready(function() {
       },
       extraData: function() {
         return {
-          "slug": $('#slug').val()
+          "statement_slug": $('#statement_slug').val(),
+          "resolution_slug": $('#resolution_slug').val()
         };
       },
       onDragEnter: function(){
@@ -489,6 +490,11 @@ function deleteStatement(slug) {
   $('#formDeleteStatement').attr('action', '/admin/casos/' + slug);
 }
 
+function deleteResolution(statement_slug, resolution_slug) {
+  $("#deleteResolution").modal();
+  $('#formDeleteResolution').attr('action', '/admin/casos/' + statement_slug + '/resoluciones/' + resolution_slug);
+}
+
 // Funcion para eliminar archivos de casos
 function deleteFileCreate(file){
   $("div[element="+file+"]").remove();
@@ -500,14 +506,14 @@ $('.removeFile').click(function(event) {
 });
 
 function removeFile(element, event) {
-  var file=element.attr('file'), slug=$('#slug').val(), urlFile=event.currentTarget.attributes[3].value;
+  var file=element.attr('file'), statement_slug=$('#statement_slug').val(), resolution_slug=$('#resolution_slug').val(), urlFile=event.currentTarget.attributes[3].value;
   urlFile=urlFile.split('/');
-  if (slug!="") {
+  if (statement_slug!="" && resolution_slug!="") {
     $.ajax({
-      url: '/admin/casos/'+slug+'/archivos/eliminar',
+      url: '/admin/casos/'+statement_slug+'/resoluciones/'+resolution_slug+'/archivos/eliminar',
       type: 'POST',
       dataType: 'json',
-      data: {slug: slug, url: urlFile[6]},
+      data: {statement_slug: statement_slug, resolution_slug: resolution_slug, url: urlFile[6]},
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
@@ -518,7 +524,7 @@ function removeFile(element, event) {
         Lobibox.notify('success', {
           title: 'Eliminación Exitosa',
           sound: true,
-          msg: 'La imagen ha sido eliminada exitosamente.'
+          msg: 'El archivo ha sido eliminado exitosamente.'
         });
       } else {
         Lobibox.notify('error', {

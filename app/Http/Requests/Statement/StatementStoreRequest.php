@@ -36,9 +36,7 @@ class StatementStoreRequest extends FormRequest
       'name' => 'required|string|min:2|max:191',
       'type' => 'required|'.Rule::in(['1', '2']),
       'company_id' => 'required|'.Rule::in($companies),
-      'description' => 'required|string|min:2|max:6000',
-      'files' => 'nullable|array',
-      'files.*' => 'required|string|min:2|max:255'
+      'description' => 'required|string|min:2|max:6000'
     ];
   }
 }

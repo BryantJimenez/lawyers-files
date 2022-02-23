@@ -53,6 +53,11 @@ use Illuminate\Http\Request;
 *	description="Statements endpoints"
 * )
 *
+* @OA\Tag(
+*	name="Resolutions",
+*	description="Resolutions endpoints"
+* )
+*
 * @OA\SecurityScheme(
 *	securityScheme="bearerAuth",
 *   in="header",
@@ -82,11 +87,21 @@ class ApiController extends Controller
 
 	public function dataStatement($statement) {
 		$statement->company=(!is_null($statement['company'])) ? $this->dataCompany($statement['company']) : [];
-		$statement->files=$statement['files']->map(function($file) {
+		$statement->resolutions=$statement['resolutions']->map(function($resolution) {
+			return $this->dataResolution($resolution);
+		});
+		$data=$statement->only("id", "name", "slug", "description", "type", "state", "company", "resolutions");
+
+		return $data;
+	}
+
+	public function dataResolution($resolution) {
+		$resolution->files=$resolution['files']->map(function($file) {
 			$data=array('id' => $file->id, 'file' => env('APP_URL').'/admins/files/statements/'.$file->name);
 			return $data;
 		});
-		$data=$statement->only("id", "name", "slug", "description", "type", "state", "company", "files");
+		$data=$resolution->only("id", "name", "slug", "description", "date", "files");
+		$data['date']=$data['date']->format('d-m-Y');
 
 		return $data;
 	}

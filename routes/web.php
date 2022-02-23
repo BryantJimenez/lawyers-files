@@ -82,10 +82,21 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		Route::get('/{statement:slug}', 'StatementController@show')->name('statements.show')->middleware('permission:statements.show');
 		Route::get('/{statement:slug}/editar', 'StatementController@edit')->name('statements.edit')->middleware('permission:statements.edit');
 		Route::put('/{statement:slug}', 'StatementController@update')->name('statements.update')->middleware('permission:statements.edit');
-		Route::post('/{statement:slug}/archivos/editar', 'StatementController@fileEdit')->name('statements.edit.files')->middleware('permission:statements.edit');
-		Route::post('/{statement:slug}/archivos/eliminar', 'StatementController@fileDestroy')->name('statements.destroy.files')->middleware('permission:statements.edit');
 		Route::delete('/{statement:slug}', 'StatementController@destroy')->name('statements.delete')->middleware('permission:statements.delete');
 		Route::put('/{statement:slug}/activar', 'StatementController@activate')->name('statements.activate')->middleware('permission:statements.active');
 		Route::put('/{statement:slug}/desactivar', 'StatementController@deactivate')->name('statements.deactivate')->middleware('permission:statements.deactive');
+
+		// Resolutions
+		Route::prefix('{statement:slug}/resoluciones')->group(function () {
+			Route::get('/registrar', 'ResolutionController@create')->name('resolutions.create')->middleware('permission:resolutions.create');
+			Route::post('/', 'ResolutionController@store')->name('resolutions.store')->middleware('permission:resolutions.create');
+			Route::post('/archivos', 'ResolutionController@fileStore')->name('resolutions.store.files')->middleware('permission:resolutions.create');
+			Route::get('/{resolution:slug}', 'ResolutionController@show')->name('resolutions.show')->middleware('permission:resolutions.show');
+			Route::get('/{resolution:slug}/editar', 'ResolutionController@edit')->name('resolutions.edit')->middleware('permission:resolutions.edit');
+			Route::put('/{resolution:slug}', 'ResolutionController@update')->name('resolutions.update')->middleware('permission:resolutions.edit');
+			Route::post('/{resolution:slug}/archivos/editar', 'ResolutionController@fileEdit')->name('resolutions.edit.files')->middleware('permission:resolutions.edit');
+			Route::post('/{resolution:slug}/archivos/eliminar', 'ResolutionController@fileDestroy')->name('resolutions.destroy.files')->middleware('permission:resolutions.edit');
+			Route::delete('/{resolution:slug}', 'ResolutionController@destroy')->name('resolutions.delete')->middleware('permission:resolutions.delete');
+		});
 	});
 });

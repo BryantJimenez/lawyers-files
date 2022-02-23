@@ -56,11 +56,20 @@ Route::group(['prefix' => 'v1'], function() {
 			Route::post('/', 'Api\StatementController@store')->middleware('permission:statements.create');
 			Route::get('/{statement:id}', 'Api\StatementController@show')->middleware('permission:statements.show');
 			Route::put('/{statement:id}', 'Api\StatementController@update')->middleware('permission:statements.edit');
-			Route::post('/{statement:id}/files', 'Api\StatementController@uploadFile')->middleware('permission:statements.edit');
-			Route::post('/{statement:id}/files/{file:id}', 'Api\StatementController@destroyFile')->middleware('permission:statements.edit');
 			Route::delete('/{statement:id}', 'Api\StatementController@destroy')->middleware('permission:statements.delete');
 			Route::put('/{statement:id}/activate', 'Api\StatementController@activate')->middleware('permission:statements.active');
 			Route::put('/{statement:id}/deactivate', 'Api\StatementController@deactivate')->middleware('permission:statements.deactive');
+
+			// Resolutions
+			Route::group(['prefix' => '{statement:id}/resolutions'], function () {
+				Route::get('/', 'Api\ResolutionController@index')->middleware('permission:statements.show');
+				Route::post('/', 'Api\ResolutionController@store')->middleware('permission:resolutions.create');
+				Route::get('/{resolution:id}', 'Api\ResolutionController@show')->middleware('permission:resolutions.show');
+				Route::put('/{resolution:id}', 'Api\ResolutionController@update')->middleware('permission:resolutions.edit');
+				Route::post('/{resolution:id}/files', 'Api\ResolutionController@uploadFile')->middleware('permission:resolutions.edit');
+				Route::post('/{resolution:id}/files/{file:id}', 'Api\ResolutionController@destroyFile')->middleware('permission:resolutions.edit');
+				Route::delete('/{resolution:id}', 'Api\ResolutionController@destroy')->middleware('permission:resolutions.delete');
+			});
 		});
 	});
 });

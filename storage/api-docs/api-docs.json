@@ -757,6 +757,440 @@
                 ]
             }
         },
+        "/api/v1/statements/{id}/resolutions": {
+            "get": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Get resolutions of statement",
+                "description": "Returns all resolutions of a single statement",
+                "operationId": "indexResolution",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Search for ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Show all resolutions of a single statement.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Register resolution",
+                "description": "Create a new resolution",
+                "operationId": "storeResolution",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Search for ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of resolution",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Description of resolution",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date of resolution (format=d-m-Y)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registered resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "422": {
+                        "description": "Data not valid."
+                    },
+                    "500": {
+                        "description": "An error occurred during the process."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/statements/{statement_id}/resolutions/{resolution_id}": {
+            "get": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Get a resolution",
+                "description": "Returns a single resolution",
+                "operationId": "showResolution",
+                "parameters": [
+                    {
+                        "name": "statement_id",
+                        "in": "path",
+                        "description": "Statement ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "resolution_id",
+                        "in": "path",
+                        "description": "Resolution ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Show resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "404": {
+                        "description": "No results found."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Update resolution",
+                "description": "Update a single resolution",
+                "operationId": "updateResolution",
+                "parameters": [
+                    {
+                        "name": "statement_id",
+                        "in": "path",
+                        "description": "Statement ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "resolution_id",
+                        "in": "path",
+                        "description": "Resolution ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of resolution",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Description of resolution",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date of resolution (format=d-m-Y)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "422": {
+                        "description": "Data not valid."
+                    },
+                    "500": {
+                        "description": "An error occurred during the process."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Delete resolution",
+                "description": "Delete a single resolution",
+                "operationId": "destroyResolution",
+                "parameters": [
+                    {
+                        "name": "statement_id",
+                        "in": "path",
+                        "description": "Statement ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "resolution_id",
+                        "in": "path",
+                        "description": "Resolution ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "404": {
+                        "description": "No results found."
+                    },
+                    "500": {
+                        "description": "An error occurred during the process."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/statements/{statement_id}/resolutions/{resolution_id}/files": {
+            "post": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Upload file a resolution",
+                "description": "Upload file a single resolution",
+                "operationId": "uploadFileResolution",
+                "parameters": [
+                    {
+                        "name": "statement_id",
+                        "in": "path",
+                        "description": "Statement ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "resolution_id",
+                        "in": "path",
+                        "description": "Resolution ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "File (PDF) of resolution",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Upload file a resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "404": {
+                        "description": "No results found."
+                    },
+                    "500": {
+                        "description": "An error occurred during the process."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/statements/{statement_id}/resolutions/{resolution_id}/files/{file_id}": {
+            "post": {
+                "tags": [
+                    "Resolutions"
+                ],
+                "summary": "Destroy file a resolution",
+                "description": "Destroy file a single resolution",
+                "operationId": "destroyFileResolution",
+                "parameters": [
+                    {
+                        "name": "statement_id",
+                        "in": "path",
+                        "description": "Statement ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "resolution_id",
+                        "in": "path",
+                        "description": "Resolution ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "description": "File ID of resolution",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Destroy file a resolution.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated."
+                    },
+                    "403": {
+                        "description": "Forbidden."
+                    },
+                    "404": {
+                        "description": "No results found."
+                    },
+                    "500": {
+                        "description": "An error occurred during the process."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/statements": {
             "get": {
                 "tags": [
@@ -1043,126 +1477,6 @@
                 ]
             }
         },
-        "/api/v1/statements/{id}/files": {
-            "post": {
-                "tags": [
-                    "Statements"
-                ],
-                "summary": "Upload file a statement",
-                "description": "Upload file a single statement",
-                "operationId": "uploadFileStatement",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Search for ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "file"
-                                ],
-                                "properties": {
-                                    "file": {
-                                        "description": "File (PDF) of statement",
-                                        "type": "file"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Upload file a statement.",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "401": {
-                        "description": "Not authenticated."
-                    },
-                    "403": {
-                        "description": "Forbidden."
-                    },
-                    "404": {
-                        "description": "No results found."
-                    },
-                    "500": {
-                        "description": "An error occurred during the process."
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/statements/{id}/files/{file_id}": {
-            "post": {
-                "tags": [
-                    "Statements"
-                ],
-                "summary": "Destroy file a statement",
-                "description": "Destroy file a single statement",
-                "operationId": "destroyFileStatement",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Search for ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "file_id",
-                        "in": "path",
-                        "description": "File ID od statement",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Destroy file a statement.",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "401": {
-                        "description": "Not authenticated."
-                    },
-                    "403": {
-                        "description": "Forbidden."
-                    },
-                    "404": {
-                        "description": "No results found."
-                    },
-                    "500": {
-                        "description": "An error occurred during the process."
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/v1/statements/{id}/deactivate": {
             "put": {
                 "tags": [
@@ -1295,6 +1609,10 @@
         {
             "name": "Statements",
             "description": "Statements endpoints"
+        },
+        {
+            "name": "Resolutions",
+            "description": "Resolutions endpoints"
         }
     ],
     "security": [

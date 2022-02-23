@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Statement\Statement;
+use App\Models\Statement;
 use Illuminate\Database\Seeder;
 
 class StatementsSeeder extends Seeder

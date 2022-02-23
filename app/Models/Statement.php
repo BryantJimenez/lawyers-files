@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Statement;
+namespace App\Models;
 
-use App\Models\Company;
+use App\Models\Resolution\Resolution;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
@@ -12,7 +12,7 @@ class Statement extends Model
 {
     use SoftDeletes, HasSlug;
 
-    protected $fillable = ['name', 'description', 'type', 'state', 'company_id'];
+    protected $fillable = ['name', 'slug', 'description', 'type', 'state', 'company_id'];
 
     /**
      * Get the type.
@@ -57,7 +57,7 @@ class Statement extends Model
             $query->withTrashed();
         }, 'company.user' => function($query) {
             $query->withTrashed();
-        }, 'files'])->where($field, $value)->first();
+        }, 'resolutions.files'])->where($field, $value)->first();
         if (!is_null($statement)) {
             return $statement;
         }
@@ -74,7 +74,7 @@ class Statement extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function files() {
-        return $this->hasMany(FileStatement::class);
+    public function resolutions() {
+        return $this->hasMany(Resolution::class);
     }
 }

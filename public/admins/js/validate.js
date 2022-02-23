@@ -412,4 +412,40 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	// Resolutions
+	$("button[action='resolution']").on("click",function(){
+		$("#formResolution").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				description: {
+					required: true,
+					minlength: 2,
+					maxlength: 6000
+				},
+
+				date: {
+					required: true,
+					date: false,
+					time: false
+				}
+			},
+			messages:
+			{
+				date: {
+					required: 'Seleccione una fecha.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='resolution']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
 });

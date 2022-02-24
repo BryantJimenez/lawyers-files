@@ -52,7 +52,7 @@ class CompanyController extends ApiController
     *   )
     * )
     */
-    public function index() {
+    public function index(Request $request) {
     	$companies=Company::with(['user'])->where('user_id', Auth::id())->get()->map(function($company) {
     		return $this->dataCompany($company);
     	});

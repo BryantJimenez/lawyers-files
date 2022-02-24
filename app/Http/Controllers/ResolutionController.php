@@ -48,7 +48,6 @@ class ResolutionController extends Controller
             $recursive=false;
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
             $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$statement->slug);
 
             $path='/'.$directory['path'].'/';
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
@@ -248,5 +247,39 @@ class ResolutionController extends Controller
         }
 
         return response()->json(['status' => false]);
+    }
+
+    public function fileDownload(Statement $statement, Resolution $resolution, FileResolution $file) {
+        if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
+            return response()->json(['status' => false], 403);
+        }
+
+        if (Auth::user()->hasRole('Cliente') && $statement->id!=$resolution->statement_id) {
+            return response()->json(['status' => false], 403);
+        }
+
+        if (Auth::user()->hasRole('Cliente') && $resolution->id!=$file->resolution_id) {
+            return response()->json(['status' => false], 403);
+        }
+
+        try {
+            $path='/';
+            $recursive=false;
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+
+            $path='/'.$directory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+
+            $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $fileData=$contents->where('type', '=', 'file')->where('filename', '=', pathinfo($file->name, PATHINFO_FILENAME))->where('extension', '=', pathinfo($file->name, PATHINFO_EXTENSION))->first();
+            $rawData=Storage::disk('google')->get($fileData['path']);
+
+            return response($rawData, 200)->header('ContentType', $fileData['mimetype'])->header('Content-Disposition', "attachment; filename=".$file->name);
+        } catch (Exception $e) {
+            Log::error("Google API Exception: ".$e->getMessage());
+        }
     }
 }

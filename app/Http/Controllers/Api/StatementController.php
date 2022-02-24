@@ -54,7 +54,7 @@ class StatementController extends ApiController
     *   )
     * )
     */
-    public function index() {
+    public function index(Request $request) {
         $statements=Company::with(['statements.company.user.roles', 'statements.resolutions.files'])->whereHas('statements')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get()->pluck('statements')->collapse()->unique('id')->values()->map(function($statement) {
             return $this->dataStatement($statement);
         });

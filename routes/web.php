@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 			Route::post('/', 'ResolutionController@store')->name('resolutions.store')->middleware('permission:resolutions.create');
 			Route::post('/archivos', 'ResolutionController@fileStore')->name('resolutions.store.files')->middleware('permission:resolutions.create');
 			Route::get('/{resolution:slug}', 'ResolutionController@show')->name('resolutions.show')->middleware('permission:resolutions.show');
+			Route::get('/{resolution:slug}/archivos/{file:id}/descargar', 'ResolutionController@fileDownload')->name('resolutions.show.files')->middleware('permission:resolutions.show');
 			Route::get('/{resolution:slug}/editar', 'ResolutionController@edit')->name('resolutions.edit')->middleware('permission:resolutions.edit');
 			Route::put('/{resolution:slug}', 'ResolutionController@update')->name('resolutions.update')->middleware('permission:resolutions.edit');
 			Route::post('/{resolution:slug}/archivos/editar', 'ResolutionController@fileEdit')->name('resolutions.edit.files')->middleware('permission:resolutions.edit');

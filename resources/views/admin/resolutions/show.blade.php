@@ -57,8 +57,8 @@
 							@foreach($resolution['files'] as $file)
 							<li class="contacts-block__item">
 								<span class="h6 text-black">
-									<a href="{{ image_exist('/admins/files/statements/', $file->name) }}" download class="mr-3">{{ $file->name }}</a>
-									<a href="{{ image_exist('/admins/files/statements/', $file->name) }}" download class="btn btn-sm btn-secondary px-2 py-1">
+									<a href="{{ route('resolutions.show.files', ['statement' => $statement->slug, 'resolution' => $resolution->slug, 'file' => $file->id]) }}" download class="mr-3">{{ $file->name }}</a>
+									<a href="{{ route('resolutions.show.files', ['statement' => $statement->slug, 'resolution' => $resolution->slug, 'file' => $file->id]) }}" download class="btn btn-sm btn-secondary px-2 py-1">
 										<i class="fa fa-sm fa-download"></i>
 									</a>
 								</span>

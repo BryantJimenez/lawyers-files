@@ -74,6 +74,7 @@ class PermissionsSeeder extends Seeder
         $customers=User::where('id', '!=', '1')->get();
         foreach ($customers as $customer) {
             $customer->assignRole('Cliente');
+            Storage::disk('google')->makeDirectory($customer->slug);
         }
     }
 }

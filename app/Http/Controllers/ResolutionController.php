@@ -47,18 +47,26 @@ class ResolutionController extends Controller
             $path='/';
             $recursive=false;
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
             $path='/'.$directory['path'].'/';
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+
+            $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
 
             // Mover archivos a carpeta statements y extraer nombre
             if ($request->has('files')) {
                 foreach (request('files') as $file) {
                     FileResolution::create(['name' => $file, 'resolution_id' => $resolution->id])->save();
                     $filePath=public_path('admins/files/statements/'.$file);
-                    Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$file, fopen($filePath, 'r+'));
+                    Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$file, fopen($filePath, 'r+'));
+
+                    if (file_exists(public_path().'/admins/files/statements/'.$file)) {
+                        unlink(public_path().'/admins/files/statements/'.$file);
+                    }
                 }
             }
 
@@ -184,14 +192,22 @@ class ResolutionController extends Controller
                 $path='/';
                 $recursive=false;
                 $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
                 $path='/'.$directory['path'].'/';
                 $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+
+                $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
 
                 $filePath=public_path('admins/files/statements/'.$name);
-                Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$name, fopen($filePath, 'r+')); 
+                Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$name, fopen($filePath, 'r+'));
+
+                if (file_exists(public_path().'/admins/files/statements/'.$name)) {
+                    unlink(public_path().'/admins/files/statements/'.$name);
+                }
             } catch (Exception $e) {
                 Log::error("Google API Exception: ".$e->getMessage());
                 return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
@@ -228,16 +244,20 @@ class ResolutionController extends Controller
                     $path='/';
                     $recursive=false;
                     $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+                    $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
                     $path='/'.$directory['path'].'/';
                     $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-                    $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+                    $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
 
                     $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
                     $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                    $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+
+                    $path='/'.$directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/';
+                    $contents=collect(Storage::disk('google')->listContents($path, $recursive));
                     $file_drive=$contents->where('type', '=', 'file')->where('filename', '=', pathinfo($file->name, PATHINFO_FILENAME))->where('extension', '=', pathinfo($file->name, PATHINFO_EXTENSION))->first();
-                    Storage::disk('google')->delete($directory['path'].'/'.$subdirectory['path'].'/'.$file_drive['path']);
+                    Storage::disk('google')->delete($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$file_drive['path']);
                 } catch (Exception $e) {
                     Log::error("Google API Exception: ".$e->getMessage());
                 }
@@ -266,13 +286,17 @@ class ResolutionController extends Controller
             $path='/';
             $recursive=false;
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
             $path='/'.$directory['path'].'/';
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
 
             $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+
+            $path='/'.$directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/';
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
             $fileData=$contents->where('type', '=', 'file')->where('filename', '=', pathinfo($file->name, PATHINFO_FILENAME))->where('extension', '=', pathinfo($file->name, PATHINFO_EXTENSION))->first();
             $rawData=Storage::disk('google')->get($fileData['path']);

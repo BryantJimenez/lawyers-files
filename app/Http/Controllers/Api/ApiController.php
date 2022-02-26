@@ -96,8 +96,8 @@ class ApiController extends Controller
 	}
 
 	public function dataResolution($resolution) {
-		$resolution->files=$resolution['files']->map(function($file) {
-			$data=array('id' => $file->id, 'file' => env('APP_URL').'/admins/files/statements/'.$file->name);
+		$resolution->files=$resolution['files']->map(function($file) use ($resolution) {
+			$data=array('id' => $file->id, 'file' => route('resolutions.show.files', ['statement' => $resolution['statement']->slug, 'resolution' => $resolution->slug, 'file' => $file->id]));
 			return $data;
 		});
 		$data=$resolution->only("id", "name", "slug", "description", "date", "files");

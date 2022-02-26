@@ -140,7 +140,7 @@ class StatementController extends ApiController
     * )
     */
     public function store(ApiStatementStoreRequest $request) {
-        $company=Company::where('id', request('company_id'))->first();
+        $company=Company::with(['user'])->where('id', request('company_id'))->first();
         $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
         $statement=Statement::create($data);
 
@@ -148,8 +148,12 @@ class StatementController extends ApiController
             $path='/';
             $recursive=false;
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$statement->slug);
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+
+            $path='/'.$directory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
+            Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
 
             $statement=Statement::with(['company.user', 'resolutions.files'])->where('id', $statement->id)->first();
             $statement=$this->dataStatement($statement);

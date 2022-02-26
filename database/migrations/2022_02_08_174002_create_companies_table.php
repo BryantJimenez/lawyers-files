@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Company;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -40,11 +40,11 @@ class CreateCompaniesTable extends Migration
     {
         $path='/';
         $recursive=false;
-        $contents=collect(Storage::cloud()->listContents($path, $recursive));
+        $contents=collect(Storage::disk('google')->listContents($path, $recursive));
 
-        $companies=Company::all();
-        foreach ($companies as $company) {
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
+        $customers=User::where('id', '!=', '1')->get();
+        foreach ($customers as $customer) {
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $customer->slug)->first();
             if ($directory) {
                 Storage::disk('google')->deleteDirectory($directory['path']);
             }

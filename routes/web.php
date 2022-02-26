@@ -78,7 +78,6 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		Route::get('/', 'StatementController@index')->name('statements.index')->middleware('permission:statements.index');
 		Route::get('/registrar', 'StatementController@create')->name('statements.create')->middleware('permission:statements.create');
 		Route::post('/', 'StatementController@store')->name('statements.store')->middleware('permission:statements.create');
-		Route::post('/archivos', 'StatementController@fileStore')->name('statements.store.files')->middleware('permission:statements.create');
 		Route::get('/{statement:slug}', 'StatementController@show')->name('statements.show')->middleware('permission:statements.show');
 		Route::get('/{statement:slug}/editar', 'StatementController@edit')->name('statements.edit')->middleware('permission:statements.edit');
 		Route::put('/{statement:slug}', 'StatementController@update')->name('statements.update')->middleware('permission:statements.edit');

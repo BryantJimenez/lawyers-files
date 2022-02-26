@@ -8,6 +8,7 @@ use App\Http\Requests\Customer\CustomerUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendEmailRegister;
+use Storage;
 use Auth;
 
 class CustomerController extends Controller
@@ -52,6 +53,7 @@ class CustomerController extends Controller
             }
 
             SendEmailRegister::dispatch($customer->slug);
+            Storage::disk('google')->makeDirectory($customer->slug);
             return redirect()->route('customers.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'El cliente ha sido registrado exitosamente.']);
         } else {
             return redirect()->route('customers.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();

@@ -141,7 +141,11 @@ class CompanyController extends ApiController
         $company=Company::create($data);
 
         if ($company) {
-            Storage::disk('google')->makeDirectory($company->slug);
+            $path='/';
+            $recursive=false;
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', Auth::user()->slug)->first();
+            Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
 
             $company=Company::with(['user'])->where('id', $company->id)->first();
             $company=$this->dataCompany($company);

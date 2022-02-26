@@ -14,9 +14,13 @@ class CompaniesSeeder extends Seeder
     {
         factory(Company::class, 5)->create();
 
-        $companies=Company::all();
+        $companies=Company::with(['user'])->get();
         foreach ($companies as $company) {
-        	Storage::disk('google')->makeDirectory($company->slug);
+            $path='/';
+            $recursive=false;
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+        	Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
         }
     }
 }

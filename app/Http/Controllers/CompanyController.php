@@ -52,7 +52,12 @@ class CompanyController extends Controller
         $company=Company::create($data);
 
         if ($company) {
-            Storage::disk('google')->makeDirectory($company->slug);
+            $path='/';
+            $recursive=false;
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $user->slug)->first();
+            Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La compañia ha sido registrada exitosamente.']);
         } else {
             return redirect()->route('companies.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();

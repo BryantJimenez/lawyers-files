@@ -47,7 +47,7 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StatementStoreRequest $request) {
-        $company=Company::where('slug', request('company_id'))->first();
+        $company=Company::with(['user'])->where('slug', request('company_id'))->first();
         $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
         $statement=Statement::create($data);
 
@@ -55,8 +55,12 @@ class StatementController extends Controller
             $path='/';
             $recursive=false;
             $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$statement->slug);
+            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+
+            $path='/'.$directory['path'].'/';
+            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
+            Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
 
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'El caso ha sido registrado exitosamente.']);
         } else {

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Company;
+use App\Models\Setting;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Api\Company\ApiCompanyStoreRequest;
 use App\Http\Requests\Api\Company\ApiCompanyUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Storage;
 use Auth;
 use Arr;
@@ -137,15 +140,27 @@ class CompanyController extends ApiController
     * )
     */
     public function store(ApiCompanyStoreRequest $request) {
+        $setting=Setting::where('id', 1)->first();
+        if (is_null($setting)) {
+            return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+        }
+
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         $data=array('name' => request('name'), 'social_reason' => request('social_reason'), 'rfc' => request('rfc'), 'address' => request('address'), 'user_id' => Auth::id());
         $company=Company::create($data);
 
         if ($company) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', Auth::user()->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', Auth::user()->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+                return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+            }
 
             $company=Company::with(['user'])->where('id', $company->id)->first();
             $company=$this->dataCompany($company);
@@ -201,8 +216,8 @@ class CompanyController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
-    	$company=$this->dataCompany($company);
-    	return response()->json(['code' => 200, 'status' => 'success', 'data' => $company], 200);
+        $company=$this->dataCompany($company);
+        return response()->json(['code' => 200, 'status' => 'success', 'data' => $company], 200);
     }
 
     /**
@@ -353,13 +368,13 @@ class CompanyController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Esta empresa no pertenece a este usuario.'], 403);
         }
 
-    	$company->delete();
-    	if ($company) {
-    		return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido eliminada con éxito.'], 200);
-    	}
+        $company->delete();
+        if ($company) {
+          return response()->json(['code' => 200, 'status' => 'success', 'message' => 'La empresa ha sido eliminada con éxito.'], 200);
+      }
 
-    	return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
-    }
+      return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+  }
 
     /**
     *

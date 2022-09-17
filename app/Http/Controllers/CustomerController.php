@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Setting;
 use App\Http\Requests\Customer\CustomerStoreRequest;
 use App\Http\Requests\Customer\CustomerUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendEmailRegister;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Storage;
 use Auth;
 
@@ -39,6 +42,9 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CustomerStoreRequest $request) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         $data=array('name' => request('name'), 'lastname' => request('lastname'), 'phone' => request('phone'), 'email' => request('email'), 'password' => Hash::make(request('password')));
         $customer=User::create($data);
 
@@ -53,7 +59,13 @@ class CustomerController extends Controller
             }
 
             SendEmailRegister::dispatch($customer->slug);
-            Storage::disk('google')->makeDirectory($customer->slug);
+            
+            try {
+                Storage::disk('google')->makeDirectory($customer->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
+
             return redirect()->route('customers.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'El cliente ha sido registrado exitosamente.']);
         } else {
             return redirect()->route('customers.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();

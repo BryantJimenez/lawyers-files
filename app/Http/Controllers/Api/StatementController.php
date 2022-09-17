@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Company;
+use App\Models\Setting;
 use App\Models\Statement;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Api\Statement\ApiStatementStoreRequest;
@@ -10,6 +11,8 @@ use App\Http\Requests\Api\Statement\ApiStatementUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Storage;
 use Auth;
 use Arr;
@@ -59,11 +62,11 @@ class StatementController extends ApiController
             return $this->dataStatement($statement);
         });
 
-    	$page=Paginator::resolveCurrentPage('page');
-    	$pagination=new LengthAwarePaginator($statements, $total=count($statements), $perPage=15, $page, ['path' => Paginator::resolveCurrentPath(), 'pageName' => 'page']);
-    	$pagination=Arr::collapse([$pagination->toArray(), ['code' => 200, 'status' => 'success']]);
+        $page=Paginator::resolveCurrentPage('page');
+        $pagination=new LengthAwarePaginator($statements, $total=count($statements), $perPage=15, $page, ['path' => Paginator::resolveCurrentPath(), 'pageName' => 'page']);
+        $pagination=Arr::collapse([$pagination->toArray(), ['code' => 200, 'status' => 'success']]);
 
-    	return response()->json($pagination, 200);
+        return response()->json($pagination, 200);
     }
 
     /**
@@ -140,20 +143,32 @@ class StatementController extends ApiController
     * )
     */
     public function store(ApiStatementStoreRequest $request) {
+        $setting=Setting::where('id', 1)->first();
+        if (is_null($setting)) {
+            return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+        }
+
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         $company=Company::with(['user'])->where('id', request('company_id'))->first();
         $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
         $statement=Statement::create($data);
 
         if ($statement) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
 
-            $path='/'.$directory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+                $path='/'.$directory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+                return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+            }
 
             $statement=Statement::with(['company.user', 'resolutions.files'])->where('id', $statement->id)->first();
             $statement=$this->dataStatement($statement);
@@ -209,8 +224,8 @@ class StatementController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
         }
 
-    	$statement=$this->dataStatement($statement);
-    	return response()->json(['code' => 200, 'status' => 'success', 'data' => $statement], 200);
+        $statement=$this->dataStatement($statement);
+        return response()->json(['code' => 200, 'status' => 'success', 'data' => $statement], 200);
     }
 
     /**
@@ -362,13 +377,13 @@ class StatementController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
         }
 
-    	$statement->delete();
-    	if ($statement) {
-    		return response()->json(['code' => 200, 'status' => 'success', 'message' => 'El caso ha sido eliminado con éxito.'], 200);
-    	}
+        $statement->delete();
+        if ($statement) {
+          return response()->json(['code' => 200, 'status' => 'success', 'message' => 'El caso ha sido eliminado con éxito.'], 200);
+      }
 
-    	return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
-    }
+      return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+  }
 
     /**
     *

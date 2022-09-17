@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Setting;
 use App\Models\Statement;
 use App\Models\Resolution\Resolution;
 use App\Models\Resolution\FileResolution;
@@ -392,6 +393,13 @@ class ResolutionController extends ApiController
     * )
      */
     public function uploadFile(ApiUploadFileResolutionStoreRequest $request, Statement $statement, Resolution $resolution) {
+        $setting=Setting::where('id', 1)->first();
+        if (is_null($setting)) {
+            return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+        }
+
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         if (!is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
         }
@@ -505,6 +513,13 @@ class ResolutionController extends ApiController
     * )
      */
     public function destroyFile(Request $request, Statement $statement, Resolution $resolution, FileResolution $file) {
+        $setting=Setting::where('id', 1)->first();
+        if (is_null($setting)) {
+            return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
+        }
+
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         if (!is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
         }
@@ -542,6 +557,7 @@ class ResolutionController extends ApiController
                     Storage::disk('google')->delete($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$file_drive['path']);
                 } catch (Exception $e) {
                     Log::error("Google API Exception: ".$e->getMessage());
+                    return response()->json(['code' => 500, 'status' => 'error', 'message' => 'Ocurrió un error durante el proceso, intente nuevamente.'], 500);
                 }
 
                 $resolution=Resolution::with(['statement.company.user', 'files'])->where('id', $resolution->id)->first();

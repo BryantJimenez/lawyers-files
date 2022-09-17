@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Statement;
 use App\Models\Resolution\Resolution;
 use App\Models\Resolution\FileResolution;
@@ -36,6 +37,9 @@ class ResolutionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ResolutionStoreRequest $request, Statement $statement) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Acceso no permitido.']);
         }
@@ -44,25 +48,34 @@ class ResolutionController extends Controller
         $resolution=Resolution::create($data);
 
         if ($resolution) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
-            $path='/'.$directory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+                $path='/'.$directory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
 
-            $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+                $path='/'.$directory['path'].'/'.$subdirectory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subsubdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement->slug)->first();
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
 
             // Mover archivos a carpeta statements y extraer nombre
             if ($request->has('files')) {
                 foreach (request('files') as $file) {
                     FileResolution::create(['name' => $file, 'resolution_id' => $resolution->id])->save();
                     $filePath=public_path('admins/files/statements/'.$file);
-                    Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$file, fopen($filePath, 'r+'));
+
+                    try {
+                        Storage::disk('google')->put($directory['path'].'/'.$subdirectory['path'].'/'.$subsubdirectory['path'].'/'.$file, fopen($filePath, 'r+'));
+                    } catch (Exception $e) {
+                        Log::error("Google API Exception: ".$e->getMessage());
+                    }
 
                     if (file_exists(public_path().'/admins/files/statements/'.$file)) {
                         unlink(public_path().'/admins/files/statements/'.$file);
@@ -175,6 +188,9 @@ class ResolutionController extends Controller
     }
 
     public function fileEdit(Request $request, Statement $statement, Resolution $resolution) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return response()->json(['status' => false], 403);
         }
@@ -223,6 +239,9 @@ class ResolutionController extends Controller
     }
 
     public function fileDestroy(Request $request, Statement $statement, Resolution $resolution) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return response()->json(['status' => false], 403);
         }
@@ -270,6 +289,9 @@ class ResolutionController extends Controller
     }
 
     public function fileDownload(Statement $statement, Resolution $resolution, FileResolution $file) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+        
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
             return response()->json(['status' => false], 403);
         }

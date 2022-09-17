@@ -59,22 +59,30 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'resolutions.edit']);
         Permission::create(['name' => 'resolutions.delete']);
 
-    	$superadmin=Role::create(['name' => 'Super Admin']);
+        // Setting Permissions
+        Permission::create(['name' => 'settings.edit']);
+
+        $superadmin=Role::create(['name' => 'Super Admin']);
         $superadmin->givePermissionTo(Permission::all());
         
         $admin=Role::create(['name' => 'Administrador']);
-    	$admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo(Permission::all());
 
         $customer=Role::create(['name' => 'Cliente']);
         $customer->givePermissionTo(['dashboard', 'companies.index', 'companies.create', 'companies.show', 'companies.edit', 'companies.delete', 'companies.active', 'companies.deactive', 'statements.index', 'statements.create', 'statements.show', 'statements.edit', 'statements.delete', 'statements.active', 'statements.deactive', 'resolutions.create', 'resolutions.show', 'resolutions.edit', 'resolutions.delete']);
 
-    	$user=User::find(1);
-    	$user->assignRole('Super Admin');
+        $user=User::find(1);
+        $user->assignRole('Super Admin');
 
         $customers=User::where('id', '!=', '1')->get();
         foreach ($customers as $customer) {
             $customer->assignRole('Cliente');
-            Storage::disk('google')->makeDirectory($customer->slug);
+
+            try {
+                Storage::disk('google')->makeDirectory($customer->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
         }
     }
 }

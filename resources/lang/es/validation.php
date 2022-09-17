@@ -155,7 +155,11 @@ return [
         'customer_id'           => 'cliente',
         'company_id'            => 'empresa',
         'description'           => 'descripción',
-        'files'                 => 'archivos'
+        'files'                 => 'archivos',
+        'google_drive_client_id' => 'client id de google drive',
+        'google_drive_client_secret' => 'client secret de google drive',
+        'google_drive_refresh_token' => 'refresh token de google drive',
+        'google_drive_folder_id' => 'id de carpeta de google drive'
     ],
 ];
 ?>

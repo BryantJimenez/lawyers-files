@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Setting;
 use App\Http\Requests\Company\CompanyStoreRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Storage;
 use Auth;
 
@@ -43,6 +46,9 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CompanyStoreRequest $request) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+        
         if (Auth::user()->hasRole('Cliente')) {
             $user=Auth::user();
         } else {
@@ -52,11 +58,15 @@ class CompanyController extends Controller
         $company=Company::create($data);
 
         if ($company) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $user->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $user->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
             
             return redirect()->route('companies.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La compañia ha sido registrada exitosamente.']);
         } else {

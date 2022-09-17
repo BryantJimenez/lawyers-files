@@ -448,4 +448,40 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	// Setting
+	$("button[action='setting']").on("click",function(){
+		$("#formSetting").validate({
+			rules:
+			{
+				google_drive_client_id: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				google_drive_client_secret: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				google_drive_refresh_token: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				google_drive_folder_id: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='setting']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
 });

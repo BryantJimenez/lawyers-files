@@ -16,11 +16,15 @@ class CompaniesSeeder extends Seeder
 
         $companies=Company::with(['user'])->get();
         foreach ($companies as $company) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
-        	Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$company->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
         }
     }
 }

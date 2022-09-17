@@ -16,15 +16,19 @@ class StatementsSeeder extends Seeder
 
         $statements=Statement::with(['company.user'])->get();
         foreach ($statements as $statement) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']['user']->slug)->first();
 
-            $path='/'.$directory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+                $path='/'.$directory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $statement['company']->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
         }
     }
 }

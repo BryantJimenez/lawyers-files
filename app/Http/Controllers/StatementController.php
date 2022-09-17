@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Setting;
 use App\Models\Statement;
 use App\Http\Requests\Statement\StatementStoreRequest;
 use App\Http\Requests\Statement\StatementUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Storage;
 use Auth;
 
@@ -47,20 +50,27 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StatementStoreRequest $request) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
+
         $company=Company::with(['user'])->where('slug', request('company_id'))->first();
         $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
         $statement=Statement::create($data);
 
         if ($statement) {
-            $path='/';
-            $recursive=false;
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
+            try {
+                $path='/';
+                $recursive=false;
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $directory=$contents->where('type', '=', 'dir')->where('filename', '=', $company['user']->slug)->first();
 
-            $path='/'.$directory['path'].'/';
-            $contents=collect(Storage::disk('google')->listContents($path, $recursive));
-            $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
-            Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+                $path='/'.$directory['path'].'/';
+                $contents=collect(Storage::disk('google')->listContents($path, $recursive));
+                $subdirectory=$contents->where('type', '=', 'dir')->where('filename', '=', $company->slug)->first();
+                Storage::disk('google')->makeDirectory($directory['path'].'/'.$subdirectory['path'].'/'.$statement->slug);
+            } catch (Exception $e) {
+                Log::error("Google API Exception: ".$e->getMessage());
+            }
 
             return redirect()->route('statements.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'El caso ha sido registrado exitosamente.']);
         } else {

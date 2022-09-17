@@ -99,4 +99,10 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 			Route::delete('/{resolution:slug}', 'ResolutionController@destroy')->name('resolutions.delete')->middleware('permission:resolutions.delete');
 		});
 	});
+
+	// Settings
+	Route::prefix('ajustes')->group(function () {
+		Route::get('/editar', 'SettingController@edit')->name('settings.edit')->middleware('permission:settings.edit');
+		Route::put('/editar', 'SettingController@update')->name('settings.update')->middleware('permission:settings.edit');
+	});
 });

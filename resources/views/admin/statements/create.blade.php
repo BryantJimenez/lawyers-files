@@ -2,25 +2,33 @@
 
 @section('title', 'Crear Caso')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+	<a href="javascript:void(0);">Casos</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="javascript:void(0);">Registro</a>
+</li>
+@endsection
+
 @section('links')
+<link rel="stylesheet" href="{{ asset('/admins/css/elements/alert.css') }}">
 <link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
 @section('content')
 
 <div class="row layout-top-spacing">
-
 	<div class="col-12 layout-spacing">
 		<div class="statbox widget box box-shadow">
 			<div class="widget-header">
 				<div class="row">
-					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
+					<div class="col-12">
 						<h4>Crear Caso</h4>
 					</div>                 
 				</div>
 			</div>
-			<div class="widget-content widget-content-area">
-
+			<div class="widget-content widget-content-area shadow-none">
 				<div class="row">
 					<div class="col-12">
 

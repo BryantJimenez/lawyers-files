@@ -13,15 +13,18 @@
 	<link href="{{ asset('/admins/css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
 	<link href="{{ asset('/admins/css/plugins.css') }}" rel="stylesheet" type="text/css" />
 	<link href="{{ asset('/admins/css/fontawesome/all.min.css') }}" rel="stylesheet" type="text/css" />
-	{{-- <link href="{{ asset('/admins/css/elements/breadcrumb.css') }}" rel="stylesheet" type="text/css" /> --}}
+	<link href="{{ asset('/admins/css/structure.css') }}" rel="stylesheet" type="text/css" class="structure" />
+    <link href="{{ asset('/admins/css/loader.css') }}" rel="stylesheet" type="text/css" />
 	<!-- END GLOBAL MANDATORY STYLES -->
 
 	<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 	@yield('links')
 	<!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-
 </head>
-<body class="sidebar-noneoverflow">
+<body>
+    <!-- BEGIN LOADER -->
+    @include('admin.partials.loader')
+    <!--  END LOADER -->
 
 	<!--  BEGIN NAVBAR  -->
 	@include('admin.partials.header')
@@ -30,8 +33,8 @@
 	<!--  BEGIN MAIN CONTAINER  -->
 	<div class="main-container" id="container">
 
-		<div class="overlay"></div>
-		<div class="search-overlay"></div>
+        <div class="overlay"></div>
+        <div class="search-overlay"></div>
 
 		<!--  BEGIN SIDEBAR  -->
 		@include('admin.partials.sidebar')
@@ -41,13 +44,16 @@
 		<div id="content" class="main-content">
 			<div class="layout-px-spacing">
 
-				{{-- <nav class="breadcrumb-one float-right mt-2" aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item"><a href="{{ route('admin') }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Inicio</a></li>
-						
-						@yield('breadcrumb')
-					</ol>
-				</nav> --}}
+                <div class="page-header">
+                    <nav class="breadcrumb-one" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin') }}">Inicio</a>
+                            </li>
+                            @yield('breadcrumb')
+                        </ol>
+                    </nav>
+                </div>
 
 				<!-- CONTENT AREA -->
 				@yield('content')
@@ -62,6 +68,7 @@
 	<!-- END MAIN CONTAINER -->
 
 	<!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+    <script src="{{ asset('/admins/js/loader.js') }}"></script>
 	<script src="{{ asset('/admins/js/libs/jquery-3.1.1.min.js') }}"></script>
 	<script src="{{ asset('/admins/js/bootstrap/popper.min.js') }}"></script>
 	<script src="{{ asset('/admins/js/bootstrap/bootstrap.min.js') }}"></script>

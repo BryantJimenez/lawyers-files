@@ -2,16 +2,25 @@
 
 @section('title', 'Perfil de Empresa')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a href="javascript:void(0);">Empresas</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+    <a href="javascript:void(0);">Perfil</a>
+</li>
+@endsection
+
 @section('links')
 <link href="{{ asset('/admins/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
 
-<div class="row">
-	<div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
+<div class="row layout-top-spacing">
+	<div class="col-xl-4 col-lg-6 col-md-5 col-12 layout-spacing">
 
-		<div class="user-profile layout-spacing">
+		<div class="user-profile">
 			<div class="widget-content widget-content-area">
 				<div class="d-flex justify-content-between">
 					<h3 class="pb-3">Datos del Cliente</h3>
@@ -46,7 +55,7 @@
 		</div>
 	</div>
 
-	<div class="col-xl-8 col-lg-6 col-md-6 col-12 layout-top-spacing">
+	<div class="col-xl-8 col-lg-6 col-md-6 col-12 layout-spacing">
 
 		<div class="user-profile layout-spacing">
 			<div class="widget-content widget-content-area">

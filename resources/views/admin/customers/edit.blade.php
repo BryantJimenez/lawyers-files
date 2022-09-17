@@ -2,7 +2,17 @@
 
 @section('title', 'Editar Cliente')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+	<a href="javascript:void(0);">Clientes</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="javascript:void(0);">Editar</a>
+</li>
+@endsection
+
 @section('links')
+<link rel="stylesheet" href="{{ asset('/admins/css/elements/alert.css') }}">
 <link rel="stylesheet" href="{{ asset('/admins/vendor/dropify/dropify.min.css') }}">
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
@@ -13,17 +23,16 @@
 @section('content')
 
 <div class="row layout-top-spacing">
-
 	<div class="col-12 layout-spacing">
 		<div class="statbox widget box box-shadow">
 			<div class="widget-header">
 				<div class="row">
-					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
+					<div class="col-12">
 						<h4>Editar Cliente</h4>
 					</div>                 
 				</div>
 			</div>
-			<div class="widget-content widget-content-area">
+			<div class="widget-content widget-content-area shadow-none">
 
 				<div class="row">
 					<div class="col-12">
@@ -74,7 +83,7 @@
 
 								<div class="form-group col-12">
 									<div class="btn-group" role="group">
-										<button type="submit" class="btn btn-primary" action="customer">Actualizar</button>
+										<button type="submit" class="btn btn-primary mr-0" action="customer">Actualizar</button>
 										<a href="{{ route('customers.index') }}" class="btn btn-secondary">Volver</a>
 									</div>
 								</div> 

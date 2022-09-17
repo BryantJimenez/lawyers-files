@@ -8,6 +8,9 @@
 			@Import	Mixins
 	===============================
 */
+.layout-px-spacing {
+  min-height: auto !important; }
+
 .wrapper {
   position: relative;
   left: 50%;
@@ -23,55 +26,64 @@
   -webkit-box-shadow: 0 4px 6px 0 rgba(85, 85, 85, 0.08), 0 1px 20px 0 rgba(0, 0, 0, 0.07), 0px 1px 11px 0px rgba(0, 0, 0, 0.07);
   -moz-box-shadow: 0 4px 6px 0 rgba(85, 85, 85, 0.08), 0 1px 20px 0 rgba(0, 0, 0, 0.07), 0px 1px 11px 0px rgba(0, 0, 0, 0.07);
   box-shadow: 0 4px 6px 0 rgba(85, 85, 85, 0.08), 0 1px 20px 0 rgba(0, 0, 0, 0.07), 0px 1px 11px 0px rgba(0, 0, 0, 0.07);
-  height: calc(100vh - 150px); }
-  .chat-system .hamburger {
-    display: none; }
-  .chat-system .user-list-box {
-    width: 30%;
-    max-width: 400px;
-    border-right: 1px solid #ebedf2;
-    border-bottom-left-radius: 6px;
-    background: #fff;
-    border-top-left-radius: 6px; }
-    .chat-system .user-list-box .search {
+  height: calc(100vh - 162px);
+  margin-bottom: 10px;
+  border-radius: 6px; }
+
+body.minimal .chat-system {
+  border: 1px solid #e0e6ed !important;
+  box-shadow: none;
+  border-radius: 5px; }
+
+.chat-system .hamburger {
+  display: none; }
+
+.chat-system .user-list-box {
+  width: 30%;
+  max-width: 400px;
+  border-right: 1px solid #ebedf2;
+  border-bottom-left-radius: 6px;
+  background: #fff;
+  border-top-left-radius: 6px; }
+  .chat-system .user-list-box .search {
+    position: relative;
+    padding: 13px 0 13px 0;
+    display: flex; }
+    .chat-system .user-list-box .search svg {
+      content: "\f169";
+      position: absolute;
+      left: 11px;
+      color: #bfc9d4;
+      top: 25px;
+      left: 30px; }
+  .chat-system .user-list-box input {
+    border-radius: 4px;
+    padding-left: 38px;
+    font-size: 16px;
+    width: 100%;
+    color: #3b3f5c;
+    border: 0;
+    outline: none;
+    padding: 12px 16px 12px 43px;
+    background: #f1f2f3;
+    margin: 0 20px 0 20px;
+    border: 1px dashed #888ea8; }
+  .chat-system .user-list-box .people {
+    padding: 0;
+    overflow: auto;
+    position: relative;
+    margin: auto;
+    width: 100%;
+    overflow: auto;
+    height: calc(100vh - 236px); }
+    .chat-system .user-list-box .people .person {
       position: relative;
-      padding: 13px 0 13px 0;
-      display: flex; }
-      .chat-system .user-list-box .search svg {
-        content: "\f169";
-        position: absolute;
-        left: 11px;
-        color: #acb0c3;
-        top: 25px;
-        left: 30px; }
-    .chat-system .user-list-box input {
-      border-radius: 4px;
-      padding-left: 38px;
-      font-size: 16px;
       width: 100%;
-      color: #3b3f5c;
-      border: 0;
-      outline: none;
-      padding: 12px 16px 12px 43px;
-      background: #f1f2f3;
-      margin: 0 20px 0 20px;
-      border: 1px dashed #888ea8; }
-    .chat-system .user-list-box .people {
-      padding: 0;
-      overflow: auto;
-      position: relative;
-      margin: auto;
-      width: 100%;
-      overflow: auto;
-      height: calc(100vh - 223px); }
-      .chat-system .user-list-box .people .person {
-        position: relative;
-        width: 100%;
-        padding: 20px 20px;
-        cursor: pointer;
-        border-bottom: 1px solid #e0e6ed; }
-        .chat-system .user-list-box .people .person.border-none {
-          border-bottom: none; }
+      padding: 20px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid #e0e6ed; }
+      .chat-system .user-list-box .people .person.border-none {
+        border-bottom: none; }
 
 .person {
   display: inline-block; }
@@ -115,7 +127,7 @@
   box-shadow: 0px 0px 15px 1px rgba(113, 106, 202, 0.2); }
 
 .chat-system .user-list-box .people .person:hover .user-info .f-body .meta-info .user-name, .chat-system .user-list-box .people .person:hover .user-info .f-body .meta-info .user-meta-time {
-  color: #1b55e2; }
+  color: #4361ee; }
 
 .chat-system .user-list-box .people .person.active:after, .chat-system .user-list-box .people .person:hover:after {
   display: none; }
@@ -127,7 +139,7 @@
   background-image: url(../../img/bg.png);
   border-bottom-right-radius: 6px;
   border-top-right-radius: 6px;
-  height: calc(100vh - 150px); }
+  height: calc(100vh - 162px); }
   .chat-system .chat-box .chat-not-selected {
     display: flex;
     height: 100%;
@@ -150,17 +162,18 @@
     display: none;
     position: absolute;
     width: 100%;
-    height: calc(100vh - 149px);
-    z-index: 4 !important;
+    height: calc(100vh - 162px);
+    z-index: -1;
     opacity: 0;
-    transition: all 0.5s ease-in-out;
-    background-color: #1b55e2;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000'%3E%3Cg %3E%3Ccircle fill='%232b50ed' cx='50' cy='0' r='50'/%3E%3Cg fill='%233154ea' %3E%3Ccircle cx='0' cy='50' r='50'/%3E%3Ccircle cx='100' cy='50' r='50'/%3E%3C/g%3E%3Ccircle fill='%233658e8' cx='50' cy='100' r='50'/%3E%3Cg fill='%233c5be5' %3E%3Ccircle cx='0' cy='150' r='50'/%3E%3Ccircle cx='100' cy='150' r='50'/%3E%3C/g%3E%3Ccircle fill='%23415fe2' cx='50' cy='200' r='50'/%3E%3Cg fill='%234662df' %3E%3Ccircle cx='0' cy='250' r='50'/%3E%3Ccircle cx='100' cy='250' r='50'/%3E%3C/g%3E%3Ccircle fill='%234b66dc' cx='50' cy='300' r='50'/%3E%3Cg fill='%235069d9' %3E%3Ccircle cx='0' cy='350' r='50'/%3E%3Ccircle cx='100' cy='350' r='50'/%3E%3C/g%3E%3Ccircle fill='%23546cd5' cx='50' cy='400' r='50'/%3E%3Cg fill='%23596fd2' %3E%3Ccircle cx='0' cy='450' r='50'/%3E%3Ccircle cx='100' cy='450' r='50'/%3E%3C/g%3E%3Ccircle fill='%235e72cf' cx='50' cy='500' r='50'/%3E%3Cg fill='%236275cb' %3E%3Ccircle cx='0' cy='550' r='50'/%3E%3Ccircle cx='100' cy='550' r='50'/%3E%3C/g%3E%3Ccircle fill='%236678c8' cx='50' cy='600' r='50'/%3E%3Cg fill='%236b7bc4' %3E%3Ccircle cx='0' cy='650' r='50'/%3E%3Ccircle cx='100' cy='650' r='50'/%3E%3C/g%3E%3Ccircle fill='%236f7ec0' cx='50' cy='700' r='50'/%3E%3Cg fill='%237381bc' %3E%3Ccircle cx='0' cy='750' r='50'/%3E%3Ccircle cx='100' cy='750' r='50'/%3E%3C/g%3E%3Ccircle fill='%237783b8' cx='50' cy='800' r='50'/%3E%3Cg fill='%237c86b4' %3E%3Ccircle cx='0' cy='850' r='50'/%3E%3Ccircle cx='100' cy='850' r='50'/%3E%3C/g%3E%3Ccircle fill='%238089b0' cx='50' cy='900' r='50'/%3E%3Cg fill='%23848bac' %3E%3Ccircle cx='0' cy='950' r='50'/%3E%3Ccircle cx='100' cy='950' r='50'/%3E%3C/g%3E%3Ccircle fill='%23888ea8' cx='50' cy='1000' r='50'/%3E%3C/g%3E%3C/svg%3E");
+    transition: all 0.4s ease-in-out;
+    background-color: rgba(3, 3, 5, 0.66);
     background-attachment: fixed;
-    background-size: contain; }
+    background-size: contain;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px); }
     .chat-system .chat-box .overlay-phone-call.phone-call-show {
-      display: block;
-      opacity: 1; }
+      opacity: 1;
+      z-index: 4; }
     .chat-system .chat-box .overlay-phone-call > div {
       display: flex;
       flex-direction: column;
@@ -203,14 +216,15 @@
           font-size: 25px;
           border-radius: 50%;
           padding: 11px;
-          background: #2196f3;
+          background: rgba(21, 21, 22, 0.28);
           margin-bottom: 23px;
           color: #fff;
           cursor: pointer;
           width: 48px;
           height: 46px;
           -webkit-transition: all 0.35s ease;
-          transition: all 0.35s ease; }
+          transition: all 0.35s ease;
+          box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.67); }
           .chat-system .chat-box .overlay-phone-call > div .calling-options svg:hover {
             -webkit-transform: translateY(-5px) scale(1.02);
             transform: translateY(-5px) scale(1.02); }
@@ -232,17 +246,18 @@
     display: none;
     position: absolute;
     width: 100%;
-    height: calc(100vh - 149px);
-    z-index: 4 !important;
+    height: calc(100vh - 162px);
+    z-index: -1;
     opacity: 0;
-    transition: all 0.5s ease-in-out;
-    background-color: #1b55e2;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000'%3E%3Cg %3E%3Ccircle fill='%232b50ed' cx='50' cy='0' r='50'/%3E%3Cg fill='%233154ea' %3E%3Ccircle cx='0' cy='50' r='50'/%3E%3Ccircle cx='100' cy='50' r='50'/%3E%3C/g%3E%3Ccircle fill='%233658e8' cx='50' cy='100' r='50'/%3E%3Cg fill='%233c5be5' %3E%3Ccircle cx='0' cy='150' r='50'/%3E%3Ccircle cx='100' cy='150' r='50'/%3E%3C/g%3E%3Ccircle fill='%23415fe2' cx='50' cy='200' r='50'/%3E%3Cg fill='%234662df' %3E%3Ccircle cx='0' cy='250' r='50'/%3E%3Ccircle cx='100' cy='250' r='50'/%3E%3C/g%3E%3Ccircle fill='%234b66dc' cx='50' cy='300' r='50'/%3E%3Cg fill='%235069d9' %3E%3Ccircle cx='0' cy='350' r='50'/%3E%3Ccircle cx='100' cy='350' r='50'/%3E%3C/g%3E%3Ccircle fill='%23546cd5' cx='50' cy='400' r='50'/%3E%3Cg fill='%23596fd2' %3E%3Ccircle cx='0' cy='450' r='50'/%3E%3Ccircle cx='100' cy='450' r='50'/%3E%3C/g%3E%3Ccircle fill='%235e72cf' cx='50' cy='500' r='50'/%3E%3Cg fill='%236275cb' %3E%3Ccircle cx='0' cy='550' r='50'/%3E%3Ccircle cx='100' cy='550' r='50'/%3E%3C/g%3E%3Ccircle fill='%236678c8' cx='50' cy='600' r='50'/%3E%3Cg fill='%236b7bc4' %3E%3Ccircle cx='0' cy='650' r='50'/%3E%3Ccircle cx='100' cy='650' r='50'/%3E%3C/g%3E%3Ccircle fill='%236f7ec0' cx='50' cy='700' r='50'/%3E%3Cg fill='%237381bc' %3E%3Ccircle cx='0' cy='750' r='50'/%3E%3Ccircle cx='100' cy='750' r='50'/%3E%3C/g%3E%3Ccircle fill='%237783b8' cx='50' cy='800' r='50'/%3E%3Cg fill='%237c86b4' %3E%3Ccircle cx='0' cy='850' r='50'/%3E%3Ccircle cx='100' cy='850' r='50'/%3E%3C/g%3E%3Ccircle fill='%238089b0' cx='50' cy='900' r='50'/%3E%3Cg fill='%23848bac' %3E%3Ccircle cx='0' cy='950' r='50'/%3E%3Ccircle cx='100' cy='950' r='50'/%3E%3C/g%3E%3Ccircle fill='%23888ea8' cx='50' cy='1000' r='50'/%3E%3C/g%3E%3C/svg%3E");
+    transition: all 0.4s ease-in-out;
+    background-color: rgba(3, 3, 5, 0.66);
     background-attachment: fixed;
-    background-size: contain; }
+    background-size: contain;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px); }
     .chat-system .chat-box .overlay-video-call.video-call-show {
-      display: block;
-      opacity: 1; }
+      opacity: 1;
+      z-index: 4; }
     .chat-system .chat-box .overlay-video-call.onConnect {
       background-image: url(../../../assets/img/640x426.jpg);
       background-repeat: no-repeat;
@@ -263,10 +278,18 @@
       .chat-system .chat-box .overlay-video-call > div .calling-user-info {
         padding: 20px 16px; }
         .chat-system .chat-box .overlay-video-call > div .calling-user-info svg {
-          font-size: 28px;
-          margin-right: 12px;
+          font-size: 25px;
+          border-radius: 50%;
+          padding: 11px;
+          background: rgba(21, 21, 22, 0.56);
+          margin-bottom: 23px;
           color: #fff;
-          cursor: pointer; }
+          cursor: pointer;
+          width: 48px;
+          height: 46px;
+          -webkit-transition: all 0.35s ease;
+          transition: all 0.35s ease;
+          box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.67); }
         .chat-system .chat-box .overlay-video-call > div .calling-user-info .user-name {
           font-size: 20px;
           color: #fff;
@@ -354,9 +377,10 @@
         vertical-align: middle;
         width: 20px;
         height: 20px;
-        fill: rgba(0, 23, 55, 0.08); }
+        fill: rgba(0, 23, 55, 0.08);
+        stroke-width: 1.6; }
         .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn svg:hover {
-          color: #1b55e2;
+          color: #4361ee;
           fill: rgba(27, 85, 226, 0.239216); }
         .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn svg:not(:last-child) {
           margin-right: 9px; }
@@ -368,6 +392,8 @@
         border-style: none;
         border-color: initial;
         border-image: initial; }
+        .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn .dropdown-menu.show {
+          top: 35px !important; }
         .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn .dropdown-menu a {
           font-size: 12px;
           font-weight: 700;
@@ -383,13 +409,13 @@
           .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn .dropdown-menu a.dropdown-item.active, .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn .dropdown-menu a.dropdown-item:active {
             background-color: transparent; }
           .chat-system .chat-box .chat-box-inner .chat-meta-user.chat-active .chat-action-btn .dropdown-menu a:hover svg {
-            color: #1b55e2;
+            color: #4361ee;
             fill: rgba(27, 85, 226, 0.239216); }
     .chat-system .chat-box .chat-box-inner .chat-conversation-box {
       position: relative;
       margin: auto;
       width: 100%;
-      height: calc(100% - 79px);
+      height: calc(100% - 133px);
       overflow: auto; }
       .chat-system .chat-box .chat-box-inner .chat-conversation-box .chat {
         position: relative;
@@ -463,7 +489,8 @@
     color: #888ea8;
     left: 11px;
     top: 12px;
-    fill: rgba(0, 23, 55, 0.08); }
+    fill: rgba(0, 23, 55, 0.08);
+    stroke-width: 1.6; }
   .chat-system .chat-box .chat-input input {
     font-size: 16px;
     width: 100%;
@@ -511,7 +538,7 @@
       transform: rotate(29deg) skew(-35deg); }
     .chat-system .chat-box .bubble.you {
       float: left;
-      color: #1b55e2;
+      color: #4361ee;
       background-color: #f6f6f6;
       -webkit-align-self: flex-start;
       align-self: flex-start;
@@ -526,7 +553,7 @@
     .chat-system .chat-box .bubble.me {
       float: right;
       color: #fff;
-      background-color: #1b55e2;
+      background-color: #4361ee;
       -webkit-align-self: flex-end;
       align-self: flex-end;
       -moz-animation-name: slideFromRight;
@@ -536,7 +563,7 @@
       box-shadow: 0px 2px 4px rgba(126, 142, 177, 0.12); }
       .chat-system .chat-box .bubble.me:before {
         right: -3px;
-        background-color: #1b55e2; }
+        background-color: #4361ee; }
   .chat-system .chat-box .conversation-start {
     position: relative;
     width: 100%;
@@ -654,6 +681,12 @@
     bottom: 83px; }
   .chat-system .chat-box .conversation-start span:before, .chat-system .chat-box .conversation-start span:after {
     background-color: transparent; } }
+
+@-moz-document url-prefix() {
+  .chat-system .chat-box .overlay-phone-call {
+    background-color: #030305; }
+  .chat-system .chat-box .overlay-video-call {
+    background-color: #030305; } }
 
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
   .chat-system .chat-box .overlay-phone-call {

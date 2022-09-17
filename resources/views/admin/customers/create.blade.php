@@ -2,7 +2,17 @@
 
 @section('title', 'Crear Cliente')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a href="javascript:void(0);">Clientes</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+    <a href="javascript:void(0);">Registro</a>
+</li>
+@endsection
+
 @section('links')
+<link rel="stylesheet" href="{{ asset('/admins/css/elements/alert.css') }}">
 <link rel="stylesheet" href="{{ asset('/admins/vendor/dropify/dropify.min.css') }}">
 <link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
@@ -10,19 +20,17 @@
 @section('content')
 
 <div class="row layout-top-spacing">
-
 	<div class="col-12 layout-spacing">
-		<div class="statbox widget box box-shadow">
-			<div class="widget-header">
-				<div class="row">
-					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
+    	<div class="statbox widget box box-shadow">
+	        <div class="widget-header">
+	            <div class="row">
+	                <div class="col-12">
 						<h4>Crear Cliente</h4>
 					</div>                 
 				</div>
 			</div>
-			<div class="widget-content widget-content-area">
-
-				<div class="row">
+			<div class="widget-content widget-content-area shadow-none">
+	        	<div class="row">
 					<div class="col-12">
 
 						@include('admin.partials.errors')
@@ -69,6 +77,7 @@
 									<label class="col-form-label">Confirmar Contraseña<b class="text-danger">*</b></label>
 									<input class="form-control" type="password" name="password_confirmation" required placeholder="********">
 								</div>
+								
 								<div class="form-group col-12">
 									<div class="btn-group" role="group">
 										<button type="submit" class="btn btn-primary" action="customer">Guardar</button>

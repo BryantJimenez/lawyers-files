@@ -1,12 +1,12 @@
 /*
-  ===============================
-      @Import Function
-  ===============================
+	===============================
+			@Import	Function
+	===============================
 */
 /*
-  ===============================
-      @Import Mixins
-  ===============================
+	===============================
+			@Import	Mixins
+	===============================
 */
 /*
  * This combined file was created by the DataTables downloader builder:
@@ -197,11 +197,3 @@ div.table-responsive > div.dataTables_wrapper > div.row {
     padding-left: 0; }
   div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:last-child {
     padding-right: 0; }
-
-.user-profile .widget-content-area .user-info-list ul.contacts-block div.dataTables_paginate svg {
-  margin-right: 0 !important;
-}
-
-div.dataTables_paginate .page-item.active .page-link {
-  color: #ffffff !important;
-}

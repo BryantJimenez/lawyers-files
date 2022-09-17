@@ -2,20 +2,34 @@
 
 @section('title', 'Detalles del Caso')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+	<a href="javascript:void(0);">Casos</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="javascript:void(0);">Perfil</a>
+</li>
+@endsection
+
 @section('links')
 <link href="{{ asset('/admins/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/datatables.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/custom_dt_html5.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/dt-global_style.css') }}">
+<link href="{{ asset('/admins/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('/admins/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
 @section('content')
 
-<div class="row">
-	<div class="@if(!is_null($statement['company'])) col-xl-8 col-lg-6 col-md-6 @endif col-12 layout-top-spacing">
+<div class="row layout-top-spacing">
+	<div class="@if(!is_null($statement['company'])) col-xl-8 col-lg-6 col-md-6 @endif col-12 layout-spacing">
 
-		<div class="user-profile layout-spacing">
-			<div class="widget-content widget-content-area">
+		<div class="user-profile">
+			<div class="widget-content widget-content-area p-4">
 				<div class="d-flex justify-content-between">
 					<h3 class="pb-3">Datos del Caso</h3>
 				</div>
@@ -52,10 +66,10 @@
 	</div>
 
 	@if(!is_null($statement['company']))
-	<div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
+	<div class="col-xl-4 col-lg-6 col-md-6 col-12 layout-spacing">
 
 		<div class="user-profile layout-spacing">
-			<div class="widget-content widget-content-area">
+			<div class="widget-content widget-content-area p-4">
 				<div class="d-flex justify-content-between">
 					<h3 class="pb-3">Datos de la Empresa</h3>
 				</div>
@@ -89,69 +103,72 @@
 	</div>
 	@endif
 
-	<div class="col-12 layout-top-spacing">
-
-		<div class="user-profile layout-spacing">
-			<div class="widget-content widget-content-area">
-				<div class="d-flex justify-content-between">
-					<h3 class="pb-3">Resoluciones del Caso</h3>
-				</div>
-				<div class="user-info-list">
-
-					<div class="">
-						<ul class="contacts-block list-unstyled mw-100 mx-2">
-							<li class="contacts-block__item">
-								@can('resolutions.create')
-								<div class="mb-3">
-									<a href="{{ route('resolutions.create', ['statement' => $statement->slug]) }}" class="btn btn-primary">Agregar</a>
-								</div>
-								@endcan
-
-								<div class="table-responsive">
-									<table class="table table-normal table-hover">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Nombre</th>
-												<th>Nº Documentos</th>
-												<th>Fecha</th>
-												@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
-												<th>Acciones</th>
-												@endif
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($statement['resolutions'] as $resolution)
-											<tr>
-												<td>{{ $loop->iteration }}</td>
-												<td>{{ $resolution->name }}</td>
-												<td>{{ $resolution['files']->count() }}</td>
-												<td>{{ $resolution->date->format('d-m-Y') }}</td>
-												@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
-												<td>
-													<div class="btn-group" role="group">
-														@can('resolutions.show')
-														<a href="{{ route('resolutions.show', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-primary btn-sm bs-tooltip" title="Perfil"><i class="fa fa-user"></i></a>
-														@endcan
-														@can('resolutions.edit')
-														<a href="{{ route('resolutions.edit', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
-														@endcan
-														@can('resolutions.delete')
-														<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteResolution('{{ $statement->slug }}', '{{ $resolution->slug }}')"><i class="fa fa-trash"></i></button>
-														@endcan
-													</div>
-												</td>
-												@endif
-											</tr>
-											@endforeach
-										</tbody>
-									</table>
-								</div>
-							</li>
-						</ul>
+	<div class="col-12 layout-spacing">
+		<div class="statbox widget box box-shadow">
+			<div class="widget-header">
+				<div class="row">
+					<div class="col-12">
+						<h4>Resoluciones del Caso</h4>
 					</div>
 				</div>
 			</div>
+			<div class="widget-content widget-content-area shadow-none">
+
+				<div class="row">
+					<div class="col-12 mt-3">
+						@can('resolutions.create')
+						<div class="text-right mr-3">
+							<a href="{{ route('resolutions.create', ['statement' => $statement->slug]) }}" class="btn btn-primary">Agregar</a>
+						</div>
+						@endcan
+
+						<table class="table table-hover table-normal">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nombre</th>
+									<th>Nº Documentos</th>
+									<th>Fecha</th>
+									@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
+									<th>Acciones</th>
+									@endif
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($statement['resolutions'] as $resolution)
+								<tr>
+									<td>{{ $loop->iteration }}</td>
+									<td>{{ $resolution->name }}</td>
+									<td>{{ $resolution['files']->count() }}</td>
+									<td>{{ $resolution->date->format('d-m-Y') }}</td>
+									@if(auth()->user()->can('resolutions.show') || auth()->user()->can('resolutions.edit') || auth()->user()->can('resolutions.delete'))
+									<td>
+										<div class="btn-group" role="group">
+											@can('resolutions.show')
+											<a href="{{ route('resolutions.show', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-primary btn-sm bs-tooltip mr-0" title="Detalles">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+											</a>
+											@endcan
+											@can('resolutions.edit')
+											<a href="{{ route('resolutions.edit', ['statement' => $statement->slug, 'resolution' => $resolution->slug]) }}" class="btn btn-info btn-sm bs-tooltip mr-0" title="Editar">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+											</a>
+											@endcan
+											@can('resolutions.delete')
+											<button type="button" class="btn btn-danger btn-sm bs-tooltip mr-0" title="Eliminar" onclick="deleteResolution('{{ $statement->slug }}', '{{ $resolution->slug }}')">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+											</button>
+											@endcan
+										</div>
+									</td>
+									@endif
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</div>
 </div>
@@ -187,4 +204,7 @@
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/jszip.min.js') }}"></script>    
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+<script src="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('/admins/vendor/sweetalerts/custom-sweetalert.js') }}"></script>
+<script src="{{ asset('/admins/vendor/lobibox/Lobibox.js') }}"></script>
 @endsection

@@ -2,14 +2,26 @@
 
 @section('title', 'Detalles de la Resolución')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a href="javascript:void(0);">Casos</a>
+</li>
+<li class="breadcrumb-item">
+    <a href="javascript:void(0);">Resoluciones</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+    <a href="javascript:void(0);">Detalle</a>
+</li>
+@endsection
+
 @section('links')
 <link href="{{ asset('/admins/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
 
-<div class="row">
-	<div class="col-12 layout-top-spacing">
+<div class="row layout-top-spacing">
+	<div class="col-12 layout-spacing">
 
 		<div class="user-profile layout-spacing">
 			<div class="widget-content widget-content-area">
@@ -43,7 +55,7 @@
 	</div>
 
 	@if($resolution['files']->count()>0)
-	<div class="col-12 layout-top-spacing">
+	<div class="col-12 layout-spacing">
 
 		<div class="user-profile layout-spacing">
 			<div class="widget-content widget-content-area">

@@ -2172,3 +2172,81 @@ label.error {
   /*border: 1px red solid;
   border-top: none;*/
 }
+
+.inv-status.badge-success {
+  color: #1abc9c!important;
+  background-color: #ddf5f0!important;
+}
+
+.inv-status.badge-danger {
+  color: #e7515a!important;
+  background-color: #fff5f5!important;
+}
+
+.inv-status.badge-primary {
+  color: #4361ee!important;
+  background-color: #c8deff!important;
+}
+
+.inv-status.badge-dark {
+  color: #ffffff!important;
+  background-color: #8084a2!important;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item i {
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  vertical-align: text-top;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-show {
+  color: #4361ee;
+  background: #c8deff;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-show svg {
+  color: #4361ee;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-success {
+  color: #1abc9c;
+  background: #ddf5f0;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-success svg {
+  color: #1abc9c;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-warning {
+  color: #e2a03f;
+  background: #fff4e4;
+}
+
+.table > tbody > tr > td .dropdown:not(.custom-dropdown-icon):not(.custom-dropdown) .dropdown-menu a.dropdown-item.action-warning svg {
+  color: #e2a03f;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+  margin-right: 0px!important;
+}
+
+.actions-visible div.dataTables_wrapper .table-responsive {
+  overflow-y: auto!important;
+}
+
+.actions-visible div.dataTables_wrapper .table-responsive::-webkit-scrollbar {
+  width: 5px;
+}
+
+.actions-visible div.dataTables_wrapper .table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.actions-visible div.dataTables_wrapper .table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.actions-visible div.dataTables_wrapper .table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

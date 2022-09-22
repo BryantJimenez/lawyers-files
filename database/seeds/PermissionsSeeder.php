@@ -66,10 +66,10 @@ class PermissionsSeeder extends Seeder
         $superadmin->givePermissionTo(Permission::all());
         
         $admin=Role::create(['name' => 'Administrador']);
-        $admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo(['dashboard', 'users.index', 'users.create', 'users.show', 'users.edit', 'users.delete', 'users.active', 'users.deactive', 'customers.index', 'customers.create', 'customers.show', 'customers.edit', 'customers.delete', 'customers.active', 'customers.deactive', 'companies.index', 'companies.create', 'companies.show', 'companies.edit', 'companies.delete', 'companies.active', 'companies.deactive', 'statements.index', 'statements.create', 'statements.show', 'statements.edit', 'statements.delete', 'statements.active', 'statements.deactive', 'resolutions.create', 'resolutions.show', 'resolutions.edit', 'resolutions.delete']);
 
         $customer=Role::create(['name' => 'Cliente']);
-        $customer->givePermissionTo(['dashboard', 'companies.index', 'companies.create', 'companies.show', 'companies.edit', 'companies.delete', 'companies.active', 'companies.deactive', 'statements.index', 'statements.create', 'statements.show', 'statements.edit', 'statements.delete', 'statements.active', 'statements.deactive', 'resolutions.create', 'resolutions.show', 'resolutions.edit', 'resolutions.delete']);
+        $customer->givePermissionTo(['dashboard', 'companies.index', 'companies.create', 'companies.show', 'companies.edit', 'companies.delete', 'companies.active', 'companies.deactive', 'statements.index', 'statements.create', 'statements.show', 'resolutions.create', 'resolutions.show', 'resolutions.edit', 'resolutions.delete']);
 
         $user=User::find(1);
         $user->assignRole('Super Admin');

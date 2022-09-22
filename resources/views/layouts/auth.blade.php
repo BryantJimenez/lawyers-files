@@ -30,7 +30,7 @@
     <script src="{{ asset('/admins/js/bootstrap/bootstrap.min.js') }}"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 
-    {{-- <script src="{{ asset('/admins/js/authentication/form-2.js') }}"></script> --}}
+    <script src="{{ asset('/admins/js/authentication/form-2.js') }}"></script>
     <script src="{{ asset('/admins/vendor/validate/jquery.validate.js') }}"></script>
     <script src="{{ asset('/admins/vendor/validate/messages_es.js') }}"></script>
     <script src="{{ asset('/admins/js/validate.js') }}"></script>

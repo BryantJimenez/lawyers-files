@@ -1,6 +1,15 @@
 <?php
 
-function state($state) {
+function state($state, $theme=NULL) {
+	if (!is_null($theme) && $theme=='invoice') {
+		if ($state=='Inactivo') {
+			return '<span class="badge badge-danger inv-status">'.$state.'</span>';
+		} elseif ($state=='Activo') {
+			return '<span class="badge badge-success inv-status">'.$state.'</span>';
+		}
+		return '<span class="badge badge-dark inv-status">'.$state.'</span>';
+	}
+
 	if ($state=='Inactivo') {
 		return '<span class="badge badge-danger">'.$state.'</span>';
 	} elseif ($state=='Activo') {
@@ -9,14 +18,21 @@ function state($state) {
 	return '<span class="badge badge-dark">'.$state.'</span>';
 }
 
-function type($type) {
+function type($type, $theme=NULL) {
+	if (!is_null($theme) && $theme=='invoice') {
+		if ($type=='Caso' || $type=='Declaración') {
+			return '<span class="badge badge-primary inv-status">'.$type.'</span>';
+		}
+		return '<span class="badge badge-dark inv-status">'.$type.'</span>';
+	}
+
 	if ($type=='Caso' || $type=='Declaración') {
 		return '<span class="badge badge-primary">'.$type.'</span>';
 	}
 	return '<span class="badge badge-dark">'.$type.'</span>';
 }
 
-function roleUser($user, $badge=true) {
+function roleUser($user, $badge=true, $theme=NULL) {
 	$num=1;
 	$roles="";
 	foreach ($user['roles'] as $rol) {
@@ -28,12 +44,20 @@ function roleUser($user, $badge=true) {
 
 	if (!is_null($user['roles']) && !empty($roles)) {
 		if ($badge) {
+			if (!is_null($theme) && $theme=='invoice') {
+				return '<span class="badge badge-primary inv-status">'.$roles.'</span>';
+			}
+
 			return '<span class="badge badge-primary">'.$roles.'</span>';
 		} else {
 			return $roles;
 		}
 	} else {
 		if ($badge) {
+			if (!is_null($theme) && $theme=='invoice') {
+				return '<span class="badge badge-dark inv-status">'.$roles.'</span>';
+			}
+			
 			return '<span class="badge badge-dark">Desconocido</span>';
 		} else {
 			return 'Desconocido';

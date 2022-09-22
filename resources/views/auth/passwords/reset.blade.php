@@ -4,49 +4,56 @@
 
 @section('content')
 
-<section class="login-block">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4 col-md-5 col-12 login-sec">
-        <h2 class="text-center">Restaurar Contraseña</h2>
-        <form class="login-form" action="{{ route('password.update') }}" method="POST" id="formReset">
-          {{ csrf_field() }}
+<div class="form-container outer">
+  <div class="form-form">
+    <div class="form-form-wrap">
+      <div class="form-container">
+        <div class="form-content">
 
-          @include('admin.partials.errors')
+          <h1 class="">Restaurar Contraseña</h1>
 
-          <input type="hidden" name="token" value="{{ $token }}">
+          <form class="text-left" action="{{ route('password.update') }}" method="POST" id="formReset">
+            {{ csrf_field() }}
 
-          <div class="form-group">
-            <label for="email" class="text-uppercase">CORREO</label>
-            <input id="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror" required placeholder="{{ 'correo@gmail.com' }}" value="{{ old('email') }}" minlength="5" maxlength="191">
-          </div>
+            @include('admin.partials.errors')
 
-          <div class="form-group">
-            <label for="password" class="text-uppercase">NUEVA CONTRASEÑA</label>
-            <input id="password" name="password" type="password" class="form-control  @error('password') is-invalid @enderror" placeholder="********" autocomplete="new-password" minlength="8" maxlength="40">
-          </div>
+            <input type="hidden" name="token" value="{{ $token }}">
 
-          <div class="form-group">
-            <label for="password_confirm" class="text-uppercase">CONFIRMAR CONTRASEÑA</label>
-            <input id="password_confirm" type="password" class="form-control" name="password_confirmation" placeholder="********" autocomplete="new-password" minlength="8" maxlength="40">
-          </div>
+            <div class="form">
 
-          <div class="form-group">
-            <button type="submit" class="btn btn-login" action="reset">Enviar</button>
-          </div>
+              <div id="email-field" class="field-wrapper input">
+                <label for="email">CORREO</label>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input id="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror" required placeholder="{{ 'correo@gmail.com' }}" value="{{ old('email') }}" minlength="5" maxlength="191">
+              </div>
 
-          <div class="form-group">
-            Deseas ingresar? <a href="{{ route('login') }}"><b>Ingresa</b></a>
-          </div>
+              <div id="password-field" class="field-wrapper input mb-2">
+                <label for="password">NUEVA CONTRASEÑA</label>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" required placeholder="Nueva Contraseña" autocomplete="new-password" minlength="8" maxlength="40">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="toggle-password" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </div>
 
-        </form>
-      </div>
+              <div id="password_confirm-field" class="field-wrapper input mb-2">
+                <label for="password_confirm">CONFIRMAR CONTRASEÑA</label>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input id="password_confirm" name="password_confirmation" type="password" class="form-control" required placeholder="Confirmar Contraseña" autocomplete="new-password" minlength="8" maxlength="40">
+              </div>
 
-      <div class="col-lg-8 col-md-7 col-12 banner-sec">
-        <img class="d-block img-fluid h-100 w-100" src="{{ asset("/auth/image.jpg") }}" alt="Imagen" title="Imagen">
+              <div class="d-sm-flex justify-content-between">
+                <div class="field-wrapper">
+                  <button type="submit" class="btn btn-primary" action="reset">Enviar</button>
+                </div>
+              </div>
+
+              <p class="signup-link">Deseas ingresar? <a href="{{ route('login') }}">Ingresa</a></p>
+            </div>
+          </form>
+
+        </div>                    
       </div>
     </div>
   </div>
-</section>
+</div>
 
 @endsection

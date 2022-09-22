@@ -189,13 +189,13 @@ $(document).ready(function() {
 
   if ($('.table-export').length) {
     $('.table-export').DataTable({
-      "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>><'table-responsive'tr><'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-        buttons: {
+      "dom": "<'inv-list-top-section'<'row'<'col-sm-12 col-md-9 d-flex flex-md-row flex-column justify-content-md-start justify-content-center'l<'dt-action-buttons align-self-center'B>><'col-sm-12 col-md-3 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f<'toolbar align-self-center'>>>><'table-responsive'tr><'inv-list-bottom-section d-sm-flex justify-content-sm-between text-center'<'inv-list-pages-count  mb-sm-0 mb-3'i><'inv-list-pagination'p>>",
+      buttons: {
         buttons: [
-        { extend: 'copy', className: 'btn' },
-        { extend: 'csv', className: 'btn' },
-        { extend: 'excel', className: 'btn' },
-        { extend: 'print', className: 'btn' }
+        { extend: 'copy', className: 'btn btn-sm my-1' },
+        { extend: 'csv', className: 'btn btn-sm my-1' },
+        { extend: 'excel', className: 'btn btn-sm my-1' },
+        { extend: 'print', className: 'btn btn-sm my-1' }
         ]
       },
       "oLanguage": {

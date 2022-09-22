@@ -29,7 +29,11 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+        if (Auth::user()->hasRole('Super Admin')) {
+            $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+        } else {
+            $roles=Role::where([['name', '!=', 'Super Admin'], ['name', '!=', 'Cliente']])->get()->pluck('name');
+        }
         return view('admin.users.create', compact('roles'));
     }
 
@@ -80,7 +84,12 @@ class UserController extends Controller
         if (Auth::user()->id==$user->id) {
             return redirect()->route('profile.edit');
         }
-        $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+
+        if (Auth::user()->hasRole('Super Admin')) {
+            $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+        } else {
+            $roles=Role::where([['name', '!=', 'Super Admin'], ['name', '!=', 'Cliente']])->get()->pluck('name');
+        }
         return view('admin.users.edit', compact("user", "roles"));
     }
 

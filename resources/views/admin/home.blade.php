@@ -13,7 +13,7 @@
 	<div class="col-lg-6 col-md-8 col-12 layout-spacing mb-3">
 		<div class="statbox widget box box-shadow">
 			<div class="widget-content widget-content-area">
-				<h6 class="font-weight-bold">Bienvenido:</h6>
+				<h6 class="font-weight-bold">Bienvenid@, {{ Auth::user()->name.' '.Auth::user()->lastname }}:</h6>
 				<p class="font-weight-bold mb-0 mt-3">Administre todo su negocio de forma simple, fácil, comoda y a medida!</p>
 			</div>
 		</div>

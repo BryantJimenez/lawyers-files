@@ -12,6 +12,7 @@
 @endsection
 
 @section('links')
+<link href="{{ asset('/admins/css/apps/invoice-list.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/datatables.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/custom_dt_html5.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/table/datatable/dt-global_style.css') }}">
@@ -29,22 +30,21 @@
 		<div class="statbox widget box box-shadow">
 			<div class="widget-header">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12 d-flex justify-content-between align-items-center">
 						<h4>Lista de Casos</h4>
-					</div>                 
+						@can('statements.create')
+						<div class="text-right mr-2">
+							<a href="{{ route('statements.create') }}" class="btn btn-sm btn-primary">Agregar</a>
+						</div>
+						@endcan
+					</div>
 				</div>
 			</div>
 			<div class="widget-content widget-content-area shadow-none">
 
 				<div class="row">
-					<div class="col-12 mt-3">
-						@can('statements.create')
-						<div class="text-right mr-3">
-							<a href="{{ route('statements.create') }}" class="btn btn-primary">Agregar</a>
-						</div>
-						@endcan
-
-						<table class="table table-export table-striped">
+					<div class="col-12">
+						<table class="table table-export">
 							<thead>
 								<tr>
 									<th>#</th>
@@ -61,18 +61,20 @@
 							<tbody>
 								@foreach($statements as $statement)
 								<tr>
-									<td>{{ $loop->iteration }}</td>
+									<td>
+										<span class="inv-number">{{ $loop->iteration }}</span>
+									</td>
 									<td>{{ $statement->name }}</td>
 									<td>{{ $statement['company']->name }}</td>
-									<td>{!! type($statement->type) !!}</td>
-									<td>{!! state($statement->state) !!}</td>
+									<td>{!! type($statement->type, 'invoice') !!}</td>
+									<td>{!! state($statement->state, 'invoice') !!}</td>
 									<td>{{ $statement->created_at->format('d-m-Y') }}</td>
 									@if(auth()->user()->can('statements.show') || auth()->user()->can('statements.edit') || auth()->user()->can('statements.active') || auth()->user()->can('statements.deactive') || auth()->user()->can('statements.delete'))
 									<td>
 										<div class="btn-group" role="group">
 											@can('statements.show')
-											<a href="{{ route('statements.show', ['statement' => $statement->slug]) }}" class="btn btn-primary btn-sm bs-tooltip mr-0" title="Detalles">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+											<a href="{{ route('statements.show', ['statement' => $statement->slug]) }}" class="btn btn-primary btn-sm bs-tooltip mr-0" title="Documentos">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder-plus"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
 											</a>
 											@endcan
 											@can('statements.edit')

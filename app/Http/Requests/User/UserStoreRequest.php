@@ -6,6 +6,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Auth;
 
 class UserStoreRequest extends FormRequest
 {
@@ -26,7 +27,11 @@ class UserStoreRequest extends FormRequest
    */
   public function rules()
   {
-    $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+    if (Auth::user()->hasRole('Super Admin')) {
+      $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
+    } else {
+      $roles=Role::where([['name', '!=', 'Super Admin'], ['name', '!=', 'Cliente']])->get()->pluck('name');
+    }
     return [
       'photo' => 'nullable|file|mimetypes:image/*',
       'name' => 'required|string|min:2|max:191',

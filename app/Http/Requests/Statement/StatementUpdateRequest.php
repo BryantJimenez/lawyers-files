@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Statement;
 
+use App\Models\Type;
 use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +28,7 @@ class StatementUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $types=Type::where('state', '1')->get()->pluck('slug');
         if (Auth::user()->hasRole('Cliente')) {
             $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get()->pluck('slug');
         } else {
@@ -35,8 +37,8 @@ class StatementUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:191',
             'description' => 'required|string|min:2|max:6000',
-            'type' => 'required|'.Rule::in(['1', '2']),
             'state' => 'required|'.Rule::in(['0', '1']),
+            'type_id' => 'required|'.Rule::in($types),
             'company_id' => 'required|'.Rule::in($companies)
         ];
     }

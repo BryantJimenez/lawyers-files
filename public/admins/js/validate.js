@@ -380,7 +380,7 @@ $(document).ready(function(){
 					maxlength: 6000
 				},
 
-				type: {
+				type_id: {
 					required: true
 				},
 
@@ -394,7 +394,7 @@ $(document).ready(function(){
 			},
 			messages:
 			{
-				type: {
+				type_id: {
 					required: 'Seleccione una opción.'
 				},
 
@@ -449,11 +449,87 @@ $(document).ready(function(){
 		});
 	});
 
+	// Types
+	$("button[action='type']").on("click",function(){
+		$("#formType").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				state: {
+					required: true
+				}
+			},
+			messages:
+			{
+				state: {
+					required: 'Seleccione una opción.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='type']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
 	// Setting
 	$("button[action='setting']").on("click",function(){
 		$("#formSetting").validate({
 			rules:
 			{
+				header_background_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				header_text_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				menu_background_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				menu_background_color_hover: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				menu_icon_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				menu_text_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				menu_border_color: {
+					required: true,
+					minlength: 7,
+					maxlength: 7
+				},
+
+				header_text: {
+					required: false,
+					minlength: 2,
+					maxlength: 100
+				},
+
 				google_drive_client_id: {
 					required: true,
 					minlength: 2,

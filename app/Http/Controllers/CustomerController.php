@@ -22,8 +22,9 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $setting=$this->setting();
         $customers=User::role('Cliente')->orderBy('id', 'DESC')->get();
-        return view('admin.customers.index', compact('customers'));
+        return view('admin.customers.index', compact('setting', 'customers'));
     }
 
     /**
@@ -32,7 +33,8 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('admin.customers.create');
+        $setting=$this->setting();
+        return view('admin.customers.create', compact('setting'));
     }
 
     /**
@@ -42,7 +44,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CustomerStoreRequest $request) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
         $data=array('name' => request('name'), 'lastname' => request('lastname'), 'phone' => request('phone'), 'email' => request('email'), 'password' => Hash::make(request('password')));
@@ -79,7 +81,8 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(User $customer) {
-        return view('admin.customers.show', compact('customer'));
+        $setting=$this->setting();
+        return view('admin.customers.show', compact('setting', 'customer'));
     }
 
     /**
@@ -89,7 +92,8 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(User $customer) {
-        return view('admin.customers.edit', compact("customer"));
+        $setting=$this->setting();
+        return view('admin.customers.edit', compact('setting', "customer"));
     }
 
     /**

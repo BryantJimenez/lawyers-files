@@ -24,6 +24,15 @@ class SettingUpdateRequest extends FormRequest
     public function rules()
     {
         return [
+            'logo' => 'nullable|file|mimetypes:image/*',
+            'header_background_color' => 'required|string|min:7|max:7',
+            'header_text_color' => 'required|string|min:7|max:7',
+            'menu_background_color' => 'required|string|min:7|max:7',
+            'menu_background_color_hover' => 'required|string|min:7|max:7',
+            'menu_icon_color' => 'required|string|min:7|max:7',
+            'menu_text_color' => 'required|string|min:7|max:7',
+            'menu_border_color' => 'required|string|min:7|max:7',
+            'header_text' => 'nullable|string|min:2|max:100',
             'google_drive_client_id' => 'required|string|min:2|max:191',
             'google_drive_client_secret' => 'required|string|min:2|max:191',
             'google_drive_refresh_token' => 'required|string|min:2|max:191',

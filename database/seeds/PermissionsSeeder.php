@@ -59,6 +59,15 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'resolutions.edit']);
         Permission::create(['name' => 'resolutions.delete']);
 
+        // Type Permissions
+        Permission::create(['name' => 'types.index']);
+        Permission::create(['name' => 'types.create']);
+        Permission::create(['name' => 'types.show']);
+        Permission::create(['name' => 'types.edit']);
+        Permission::create(['name' => 'types.delete']);
+        Permission::create(['name' => 'types.active']);
+        Permission::create(['name' => 'types.deactive']);
+
         // Setting Permissions
         Permission::create(['name' => 'settings.edit']);
 

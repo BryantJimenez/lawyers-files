@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
 
 class GoogleDriveServiceProvider extends ServiceProvider
@@ -13,11 +14,12 @@ class GoogleDriveServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Storage::extend('google', function($app, $config) {
+        $setting=Setting::where('id', 1)->firstOrFail();
+        \Storage::extend('google', function($app, $config) use ($setting) {
             $client = new \Google_Client();
-            $client->setClientId($config['clientId']);
-            $client->setClientSecret($config['clientSecret']);
-            $client->refreshToken($config['refreshToken']);
+            $client->setClientId($setting->google_drive_client_id);
+            $client->setClientSecret($setting->google_drive_client_secret);
+            $client->refreshToken($setting->google_drive_refresh_token);
             $service = new \Google_Service_Drive($client);
 
             $options = [];
@@ -25,7 +27,7 @@ class GoogleDriveServiceProvider extends ServiceProvider
                 $options['teamDriveId'] = $config['teamDriveId'];
             }
 
-            $adapter = new GoogleDriveAdapter($service, $config['folderId'], $options);
+            $adapter = new GoogleDriveAdapter($service, $setting->google_drive_folder_id, $options);
 
             return new \League\Flysystem\Filesystem($adapter);
         });

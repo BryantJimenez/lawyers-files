@@ -100,6 +100,18 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
 		});
 	});
 
+	// Types
+	Route::prefix('tipos')->group(function () {
+		Route::get('/', 'TypeController@index')->name('types.index')->middleware('permission:types.index');
+		Route::get('/registrar', 'TypeController@create')->name('types.create')->middleware('permission:types.create');
+		Route::post('/', 'TypeController@store')->name('types.store')->middleware('permission:types.create');
+		Route::get('/{type:slug}/editar', 'TypeController@edit')->name('types.edit')->middleware('permission:types.edit');
+		Route::put('/{type:slug}', 'TypeController@update')->name('types.update')->middleware('permission:types.edit');
+		Route::delete('/{type:slug}', 'TypeController@destroy')->name('types.delete')->middleware('permission:types.delete');
+		Route::put('/{type:slug}/activar', 'TypeController@activate')->name('types.activate')->middleware('permission:types.active');
+		Route::put('/{type:slug}/desactivar', 'TypeController@deactivate')->name('types.deactivate')->middleware('permission:types.deactive');
+	});
+
 	// Settings
 	Route::prefix('ajustes')->group(function () {
 		Route::get('/editar', 'SettingController@edit')->name('settings.edit')->middleware('permission:settings.edit');

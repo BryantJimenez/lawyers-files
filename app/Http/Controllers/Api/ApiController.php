@@ -86,6 +86,7 @@ class ApiController extends Controller
 	}
 
 	public function dataStatement($statement) {
+		$statement->type=(!is_null($statement['type'])) ? $this->dataType($statement['type']) : [];
 		$statement->company=(!is_null($statement['company'])) ? $this->dataCompany($statement['company']) : [];
 		$statement->resolutions=$statement['resolutions']->map(function($resolution) {
 			return $this->dataResolution($resolution);
@@ -102,6 +103,12 @@ class ApiController extends Controller
 		});
 		$data=$resolution->only("id", "name", "slug", "description", "date", "files");
 		$data['date']=$data['date']->format('d-m-Y');
+
+		return $data;
+	}
+
+	public function dataType($type) {
+		$data=$type->only("id", "name", "slug", "state");
 
 		return $data;
 	}

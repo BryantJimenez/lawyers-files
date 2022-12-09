@@ -27,7 +27,8 @@ class ResolutionController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Consulta fallida', 'msg' => 'Acceso no permitido.']);
         }
 
-        return view('admin.resolutions.create', compact('statement'));
+        $setting=$this->setting();
+        return view('admin.resolutions.create', compact('setting', 'statement'));
     }
 
     /**
@@ -37,7 +38,7 @@ class ResolutionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ResolutionStoreRequest $request, Statement $statement) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
@@ -104,7 +105,8 @@ class ResolutionController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Consulta fallida', 'msg' => 'Acceso no permitido.']);
         }
 
-        return view('admin.resolutions.show', compact('statement', 'resolution'));
+        $setting=$this->setting();
+        return view('admin.resolutions.show', compact('setting', 'statement', 'resolution'));
     }
 
     /**
@@ -122,7 +124,8 @@ class ResolutionController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
 
-        return view('admin.resolutions.edit', compact("statement", 'resolution'));
+        $setting=$this->setting();
+        return view('admin.resolutions.edit', compact('setting', "statement", 'resolution'));
     }
 
     /**
@@ -188,7 +191,7 @@ class ResolutionController extends Controller
     }
 
     public function fileEdit(Request $request, Statement $statement, Resolution $resolution) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
@@ -239,7 +242,7 @@ class ResolutionController extends Controller
     }
 
     public function fileDestroy(Request $request, Statement $statement, Resolution $resolution) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+       $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {
@@ -289,7 +292,7 @@ class ResolutionController extends Controller
     }
 
     public function fileDownload(Statement $statement, Resolution $resolution, FileResolution $file) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
         
         if (Auth::user()->hasRole('Cliente') && !is_null($statement['company']) && $statement['company']->user_id!=Auth::id()) {

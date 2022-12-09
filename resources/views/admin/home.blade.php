@@ -91,24 +91,6 @@
         </div>
     </div>
     @endcan
-
-    @can('resolutions.index')
-    <div class="col-lg-3 col-md-4 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-one_hybrid widget-engagement">
-            <div class="widget-heading mb-0">
-                <div class="w-title mb-0">
-                    <div class="w-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-percent"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
-                    </div>
-                    <div class="">
-                        <p class="w-value">{{ $statements }}</p>
-                        <h5 class="">statements</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
     @endif
 
 
@@ -142,24 +124,6 @@
                     <div class="">
                         <p class="w-value">{{ $cases }}</p>
                         <h5 class="">Casos</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-
-    @can('resolutions.index')
-    <div class="col-lg-3 col-md-4 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-one_hybrid widget-referral">
-            <div class="widget-heading mb-0">
-                <div class="w-title mb-0">
-                    <div class="w-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                    </div>
-                    <div class="">
-                        <p class="w-value">{{ $statements }}</p>
-                        <h5 class="">Declaraciones</h5>
                     </div>
                 </div>
             </div>

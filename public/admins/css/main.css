@@ -2160,6 +2160,10 @@ table .badge-success, table .badge-primary, table .badge-warning, table .badge-d
   height: 16px;
 }
 
+.mw-400 {
+  max-width: 400px;
+}
+
 /* Styles Jquery Validate */
 
 label.error {

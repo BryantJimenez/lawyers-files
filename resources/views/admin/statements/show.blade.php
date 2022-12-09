@@ -109,7 +109,7 @@
 								<span class="h6 text-black"><b>Nombre:</b> {{ $statement->name }}</span>
 							</li>
 							<li class="contacts-block__item">
-								<span class="h6 text-black"><b>Tipo:</b> {!! type($statement->type, 'invoice') !!}</span>
+								<span class="h6 text-black"><b>Tipo:</b> {!! type($statement['type'], 'invoice') !!}</span>
 							</li>
 							<li class="contacts-block__item">
 								<span class="h6 text-black"><b>Descripción:</b> {{ $statement->description }}</span>

@@ -1,6 +1,6 @@
 <div class="header-container fixed-top">
-    <header class="header navbar navbar-expand-sm">
-        <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
+    <header class="header navbar navbar-expand-sm" @if(!is_null($setting->header_background_color) && !empty($setting->header_background_color)) style="background-color: {{ $setting->header_background_color }}!important;" @endif>
+        <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom" @if(!is_null($setting->header_text_color) && !empty($setting->header_text_color)) style="color: {{ $setting->header_text_color }}!important;" @endif>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
                 <line x1="3" y1="12" x2="21" y2="12"></line>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -8,7 +8,10 @@
             </svg>
         </a>
         <ul class="navbar-item flex-row navbar-dropdown search-ul">
-            <li class="nav-item dropdown user-profile-dropdown  order-lg-0 order-1">
+            @if(!is_null($setting->header_text) && !empty($setting->header_text))
+            <li class="nav-item text-right d-sm-flex align-items-center d-none mw-400 mx-2" @if(!is_null($setting->header_text_color) && !empty($setting->header_text_color)) style="color: {{ $setting->header_text_color }}!important;" @endif>{{ $setting->header_text }}</li>
+            @endif
+            <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
                 <a href="{{ route('admin') }}" class="nav-link dropdown-toggle user" id="userProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img src="{{ image_exist('/admins/img/users/', Auth::user()->photo, true) }}" alt="avatar" title="avatar" class="img-fluid">
                 </a>

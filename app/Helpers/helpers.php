@@ -20,16 +20,16 @@ function state($state, $theme=NULL) {
 
 function type($type, $theme=NULL) {
 	if (!is_null($theme) && $theme=='invoice') {
-		if ($type=='Caso' || $type=='Declaración') {
-			return '<span class="badge badge-primary inv-status">'.$type.'</span>';
+		if (!is_null($type)) {
+			return '<span class="badge badge-primary inv-status">'.$type->name.'</span>';
 		}
-		return '<span class="badge badge-dark inv-status">'.$type.'</span>';
+		return '<span class="badge badge-dark inv-status">Desconocido</span>';
 	}
 
-	if ($type=='Caso' || $type=='Declaración') {
-		return '<span class="badge badge-primary">'.$type.'</span>';
+	if (!is_null($type)) {
+		return '<span class="badge badge-primary">'.$type->name.'</span>';
 	}
-	return '<span class="badge badge-dark">'.$type.'</span>';
+	return '<span class="badge badge-dark">Desconocido</span>';
 }
 
 function roleUser($user, $badge=true, $theme=NULL) {

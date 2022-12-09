@@ -19,8 +19,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $setting=$this->setting();
         $users=User::role(['Super Admin', 'Administrador'])->with(['roles'])->orderBy('id', 'DESC')->get();
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('setting', 'users'));
     }
 
     /**
@@ -29,12 +30,13 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $setting=$this->setting();
         if (Auth::user()->hasRole('Super Admin')) {
             $roles=Role::where('name', '!=', 'Cliente')->get()->pluck('name');
         } else {
             $roles=Role::where([['name', '!=', 'Super Admin'], ['name', '!=', 'Cliente']])->get()->pluck('name');
         }
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('setting', 'roles'));
     }
 
     /**
@@ -71,7 +73,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(User $user) {
-        return view('admin.users.show', compact('user'));
+        $setting=$this->setting();
+        return view('admin.users.show', compact('setting', 'user'));
     }
 
     /**
@@ -81,6 +84,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user) {
+        $setting=$this->setting();
         if (Auth::user()->id==$user->id) {
             return redirect()->route('profile.edit');
         }
@@ -90,7 +94,7 @@ class UserController extends Controller
         } else {
             $roles=Role::where([['name', '!=', 'Super Admin'], ['name', '!=', 'Cliente']])->get()->pluck('name');
         }
-        return view('admin.users.edit', compact("user", "roles"));
+        return view('admin.users.edit', compact('setting', "user", "roles"));
     }
 
     /**

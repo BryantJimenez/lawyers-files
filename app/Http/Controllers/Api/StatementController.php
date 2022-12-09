@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Type;
 use App\Models\Company;
 use App\Models\Setting;
 use App\Models\Statement;
@@ -99,13 +100,12 @@ class StatementController extends ApiController
     *       )
     *   ),
     *   @OA\Parameter(
-    *       name="type",
+    *       name="type_id",
     *       in="query",
-    *       description="Type of statement (1=Case, 2=Statement)",
+    *       description="Type of statement ID",
     *       required=true,
     *       @OA\Schema(
-    *           type="string",
-    *           enum={"1", "2"}
+    *           type="integer"
     *       )
     *   ),
     *   @OA\Parameter(
@@ -151,7 +151,7 @@ class StatementController extends ApiController
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
         $company=Company::with(['user'])->where('id', request('company_id'))->first();
-        $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
+        $data=array('name' => request('name'), 'description' => request('description'), 'type_id' => request('type_id'), 'company_id' => $company->id);
         $statement=Statement::create($data);
 
         if ($statement) {
@@ -267,13 +267,12 @@ class StatementController extends ApiController
     *       )
     *   ),
     *   @OA\Parameter(
-    *       name="type",
+    *       name="type_id",
     *       in="query",
-    *       description="Type of statement (1=Case, 2=Statement)",
+    *       description="Type of statement ID",
     *       required=true,
     *       @OA\Schema(
-    *           type="string",
-    *           enum={"1", "2"}
+    *           type="integer"
     *       )
     *   ),
     *   @OA\Parameter(
@@ -315,7 +314,7 @@ class StatementController extends ApiController
             return response()->json(['code' => 403, 'status' => 'error', 'message' => 'Este caso no pertenece a este usuario.'], 403);
         }
 
-        $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => request('company_id'));
+        $data=array('name' => request('name'), 'description' => request('description'), 'type_id' => request('type_id'), 'company_id' => request('company_id'));
         $statement->fill($data)->save();
         if ($statement) {
             $statement=Statement::with(['company.user', 'resolutions.files'])->where('id', $statement->id)->first();

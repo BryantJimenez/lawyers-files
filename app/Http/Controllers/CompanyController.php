@@ -21,12 +21,13 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $setting=$this->setting();
         if (Auth::user()->hasRole('Cliente')) {
             $companies=Company::where('user_id', Auth::id())->orderBy('id', 'DESC')->get();
         } else {
             $companies=Company::orderBy('id', 'DESC')->get();
         }
-        return view('admin.companies.index', compact('companies'));
+        return view('admin.companies.index', compact('setting', 'companies'));
     }
 
     /**
@@ -35,8 +36,9 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $setting=$this->setting();
         $customers=User::role('Cliente')->where('state', '1')->get();
-        return view('admin.companies.create', compact('customers'));
+        return view('admin.companies.create', compact('setting', 'customers'));
     }
 
     /**
@@ -46,7 +48,7 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CompanyStoreRequest $request) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
         
         if (Auth::user()->hasRole('Cliente')) {
@@ -85,7 +87,8 @@ class CompanyController extends Controller
             return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
         
-        return view('admin.companies.show', compact('company'));
+        $setting=$this->setting();
+        return view('admin.companies.show', compact('setting', 'company'));
     }
 
     /**
@@ -99,8 +102,9 @@ class CompanyController extends Controller
             return redirect()->route('companies.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
 
+        $setting=$this->setting();
         $customers=User::role('Cliente')->where('state', '1')->get();
-        return view('admin.companies.edit', compact("company", 'customers'));
+        return view('admin.companies.edit', compact('setting', "company", 'customers'));
     }
 
     /**

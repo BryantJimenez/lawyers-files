@@ -470,6 +470,16 @@ function activeStatement(slug) {
   $('#formActiveStatement').attr('action', '/admin/casos/' + slug + '/activar');
 }
 
+function deactiveType(slug) {
+  $("#deactiveType").modal();
+  $('#formDeactiveType').attr('action', '/admin/tipos/' + slug + '/desactivar');
+}
+
+function activeType(slug) {
+  $("#activeType").modal();
+  $('#formActiveType').attr('action', '/admin/tipos/' + slug + '/activar');
+}
+
 //funciones para preguntar al eliminar
 function deleteUser(slug) {
   $("#deleteUser").modal();
@@ -494,6 +504,11 @@ function deleteStatement(slug) {
 function deleteResolution(statement_slug, resolution_slug) {
   $("#deleteResolution").modal();
   $('#formDeleteResolution').attr('action', '/admin/casos/' + statement_slug + '/resoluciones/' + resolution_slug);
+}
+
+function deleteType(slug) {
+  $("#deleteType").modal();
+  $('#formDeleteType').attr('action', '/admin/tipos/' + slug);
 }
 
 // Funcion para eliminar archivos de casos

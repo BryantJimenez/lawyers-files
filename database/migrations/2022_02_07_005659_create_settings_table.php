@@ -15,6 +15,15 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->string('logo')->nullable();
+            $table->string('header_background_color')->nullable();
+            $table->string('header_text_color')->nullable();
+            $table->string('menu_background_color')->nullable();
+            $table->string('menu_background_color_hover')->nullable();
+            $table->string('menu_icon_color')->nullable();
+            $table->string('menu_text_color')->nullable();
+            $table->string('menu_border_color')->nullable();
+            $table->string('header_text')->nullable();
             $table->string('google_drive_client_id')->nullable();
             $table->string('google_drive_client_secret')->nullable();
             $table->string('google_drive_refresh_token')->nullable();

@@ -19,44 +19,27 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index() {
+        $setting=$this->setting();
         $users=User::role(['Super Admin', 'Administrador'])->count();
         $customers=User::role('Cliente')->count();
         if (Auth::user()->hasRole('Cliente')) {
             $companies=Company::where('user_id', Auth::id())->count();
-            $cases=Company::with(['statements'])->where('user_id', Auth::id())->whereHas('statements', function (Builder $query) {
-                $query->where('type', '1');
-            })->get()->pluck('statements')->collapse()->unique('id')->values()->map(function($case) {
-                if ($case->type!='Caso') {
-                    return NULL;
-                }
-                return $case;
-            })->reject(function($case) {
-                return is_null($case);
-            })->values()->count();
-            $statements=Company::with(['statements'])->where('user_id', Auth::id())->whereHas('statements', function (Builder $query) {
-                $query->where('type', '2');
-            })->get()->pluck('statements')->collapse()->unique('id')->values()->map(function($statement) {
-                if ($statement->type!='Declaración') {
-                    return NULL;
-                }
-                return $statement;
-            })->reject(function($statement) {
-                return is_null($statement);
-            })->values()->count();
+            $cases=Company::with(['statements'])->where('user_id', Auth::id())->whereHas('statements')->get()->pluck('statements')->collapse()->unique('id')->values()->count();
         } else {
             $companies=Company::count();
-            $cases=Statement::where('type', '1')->count();
-            $statements=Statement::where('type', '2')->count();
+            $cases=Statement::count();
         }
-        return view('admin.home', compact('users', 'customers', 'companies', 'cases', 'statements'));
+        return view('admin.home', compact('setting', 'users', 'customers', 'companies', 'cases'));
     }
 
     public function profile() {
-        return view('admin.profile');
+        $setting=$this->setting();
+        return view('admin.profile', compact('setting'));
     }
 
     public function profileEdit() {
-        return view('admin.edit');
+        $setting=$this->setting();
+        return view('admin.edit', compact('setting'));
     }
 
     public function profileUpdate(ProfileUpdateRequest $request) {

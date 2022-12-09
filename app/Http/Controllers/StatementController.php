@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Type;
 use App\Models\Company;
 use App\Models\Setting;
 use App\Models\Statement;
@@ -21,12 +22,21 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $setting=$this->setting();
         if (Auth::user()->hasRole('Cliente')) {
-            $statements=Company::with(['statements'])->whereHas('statements')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get()->pluck('statements')->collapse()->unique('id')->values();
+            $statements=Company::with(['statements', 'statements.type' => function($query) {
+                $query->withTrashed();
+            }, 'statements.company' => function($query) {
+                $query->withTrashed();
+            }])->whereHas('statements')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get()->pluck('statements')->collapse()->unique('id')->values();
         } else {
-            $statements=Statement::orderBy('id', 'DESC')->get();
+            $statements=Statement::with(['type' => function($query) {
+                $query->withTrashed();
+            }, 'company' => function($query) {
+                $query->withTrashed();
+            }])->orderBy('id', 'DESC')->get();
         }
-        return view('admin.statements.index', compact('statements'));
+        return view('admin.statements.index', compact('setting', 'statements'));
     }
 
     /**
@@ -35,12 +45,14 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $setting=$this->setting();
+        $types=Type::where('state', '1')->get();
         if (Auth::user()->hasRole('Cliente')) {
             $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get();
         } else {
             $companies=Company::where('state', '1')->get();
         }
-        return view('admin.statements.create', compact('companies'));
+        return view('admin.statements.create', compact('setting', 'types', 'companies'));
     }
 
     /**
@@ -50,11 +62,12 @@ class StatementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StatementStoreRequest $request) {
-        $setting=Setting::where('id', 1)->firstOrFail();
+        $setting=$this->setting();
         config(['filesystems.disks.google.clientId' => $setting->google_drive_client_id, 'filesystems.disks.google.clientSecret' => $setting->google_drive_client_secret, 'filesystems.disks.google.refreshToken' => $setting->google_drive_refresh_token, 'filesystems.disks.google.folderId' => $setting->google_drive_folder_id]);
 
+        $type=Type::where('slug', request('type_id'))->first();
         $company=Company::with(['user'])->where('slug', request('company_id'))->first();
-        $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'company_id' => $company->id);
+        $data=array('name' => request('name'), 'description' => request('description'), 'type_id' => $type->id, 'company_id' => $company->id);
         $statement=Statement::create($data);
 
         if ($statement) {
@@ -89,7 +102,8 @@ class StatementController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
 
-        return view('admin.statements.show', compact('statement'));
+        $setting=$this->setting();
+        return view('admin.statements.show', compact('setting', 'statement'));
     }
 
     /**
@@ -103,12 +117,14 @@ class StatementController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
 
+        $setting=$this->setting();
+        $types=Type::where('state', '1')->get();
         if (Auth::user()->hasRole('Cliente')) {
             $companies=Company::where([['state', '1'], ['user_id', Auth::id()]])->get();
         } else {
             $companies=Company::where('state', '1')->get();
         }
-        return view('admin.statements.edit', compact("statement", 'companies'));
+        return view('admin.statements.edit', compact('setting', "statement", 'types', 'companies'));
     }
 
     /**
@@ -123,8 +139,9 @@ class StatementController extends Controller
             return redirect()->route('statements.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Acceso no permitido.']);
         }
 
+        $type=Type::where('slug', request('type_id'))->first();
         $company=Company::where('slug', request('company_id'))->first();
-        $data=array('name' => request('name'), 'description' => request('description'), 'type' => request('type'), 'state' => request('state'), 'company_id' => $company->id);
+        $data=array('name' => request('name'), 'description' => request('description'), 'state' => request('state'), 'type_id' => $type->id, 'company_id' => $company->id);
         $statement->fill($data)->save();        
 
         if ($statement) {

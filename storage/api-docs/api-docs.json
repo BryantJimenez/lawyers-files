@@ -1257,16 +1257,12 @@
                         }
                     },
                     {
-                        "name": "type",
+                        "name": "type_id",
                         "in": "query",
-                        "description": "Type of statement (1=Case, 2=Statement)",
+                        "description": "Type of statement ID",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "1",
-                                "2"
-                            ]
+                            "type": "integer"
                         }
                     },
                     {
@@ -1384,16 +1380,12 @@
                         }
                     },
                     {
-                        "name": "type",
+                        "name": "type_id",
                         "in": "query",
-                        "description": "Type of statement (1=Case, 2=Statement)",
+                        "description": "Type of statement ID",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "1",
-                                "2"
-                            ]
+                            "type": "integer"
                         }
                     },
                     {

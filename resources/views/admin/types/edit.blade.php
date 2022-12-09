@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Editar Caso')
+@section('title', 'Editar Tipo de Casos')
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-	<a href="javascript:void(0);">Casos</a>
+	<a href="javascript:void(0);">Tipos de Casos</a>
 </li>
 <li class="breadcrumb-item active" aria-current="page">
 	<a href="javascript:void(0);">Editar</a>
@@ -27,7 +27,7 @@
 			<div class="widget-header">
 				<div class="row">
 					<div class="col-12">
-						<h4>Editar Caso</h4>
+						<h4>Editar Tipo de Casos</h4>
 					</div>                 
 				</div>
 			</div>
@@ -39,52 +39,27 @@
 						@include('admin.partials.errors')
 
 						<p>Campos obligatorios (<b class="text-danger">*</b>)</p>
-						<form action="{{ route('statements.update', ['statement' => $statement->slug]) }}" method="POST" class="form" id="formStatement">
+						<form action="{{ route('types.update', ['type' => $type->slug]) }}" method="POST" class="form" id="formType">
 							@csrf
 							@method('PUT')
 							<div class="row">
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Nombre<b class="text-danger">*</b></label>
-									<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $statement->name }}">
-								</div>
-
-								<div class="form-group col-lg-6 col-md-6 col-12">
-									<label class="col-form-label">Tipo<b class="text-danger">*</b></label>
-									<select class="form-control @error('type_id') is-invalid @enderror" name="type_id" required>
-										<option value="">Seleccione</option>
-										@foreach($types as $type)
-										<option value="{{ $type->slug }}" @if($statement->type_id==$type->id) selected @endif>{{ $type->name }}</option>
-										@endforeach
-									</select>
-								</div>
-
-								<div class="form-group col-lg-6 col-md-6 col-12">
-									<label class="col-form-label">Empresa<b class="text-danger">*</b></label>
-									<select class="form-control @error('company_id') is-invalid @enderror" name="company_id" required>
-										<option value="">Seleccione</option>
-										@foreach($companies as $company)
-										<option value="{{ $company->slug }}" @if($statement->company_id==$company->id) selected @endif>{{ $company->name }}</option>
-										@endforeach
-									</select>
+									<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $type->name }}">
 								</div>
 
 								<div class="form-group col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Estado<b class="text-danger">*</b></label>
 									<select class="form-control @error('state') is-invalid @enderror" name="state" required>
-										<option value="1" @if($statement->state=="Activo") selected @endif>Activo</option>
-										<option value="0" @if($statement->state=="Inactivo") selected @endif>Inactivo</option>
+										<option value="1" @if($type->state=="Activo") selected @endif>Activo</option>
+										<option value="0" @if($type->state=="Inactivo") selected @endif>Inactivo</option>
 									</select>
 								</div>
 
 								<div class="form-group col-12">
-									<label class="col-form-label">Descripción<b class="text-danger">*</b></label>
-									<textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Introduzca una descripción" rows="3">{{ $statement->description }}</textarea>
-								</div>
-
-								<div class="form-group col-12">
 									<div class="btn-group" role="group">
-										<button type="submit" class="btn btn-primary mr-0" action="statement">Actualizar</button>
-										<a href="{{ route('statements.index') }}" class="btn btn-secondary">Volver</a>
+										<button type="submit" class="btn btn-primary mr-0" action="type">Actualizar</button>
+										<a href="{{ route('types.index') }}" class="btn btn-secondary">Volver</a>
 									</div>
 								</div> 
 							</div>
